@@ -4,275 +4,797 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>GBoS GEOAI | Groundwater and Agricultural Land Intelligence</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --green:#00843d;--red:#ce1126;--blue:#1d5eaa;
-  --ink:#182536;--muted:#718096;--line:#e2e8f0;
-  --bg:#f2f5f8;--soft:#f7f9fb;
+ --green:#00843d;
+ --red:#ce1126;
+ --blue:#1d5eaa;
+ --ink:#182536;
+ --muted:#718096;
+ --line:#e2e8f0;
+ --bg:#f2f5f8;
+ --soft:#f7f9fb;
 }
+
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",sans-serif;font-size:13px}
-header{background:#fff;border-bottom:1px solid var(--line)}
-.flag-strip{height:7px;display:flex}
+
+body{
+ margin:0;
+ background:var(--bg);
+ color:var(--ink);
+ font-family:"DM Sans",sans-serif;
+ font-size:13px;
+}
+
+header{
+ background:#fff;
+ border-bottom:1px solid var(--line);
+}
+
+.flag-strip{
+ height:7px;
+ display:flex;
+}
+
 .flag-strip span{flex:1}
 .flag-strip span:nth-child(1){background:#ce1126}
-.flag-strip span:nth-child(2),.flag-strip span:nth-child(4){background:#fff}
+.flag-strip span:nth-child(2){background:#fff}
 .flag-strip span:nth-child(3){background:#1d5eaa}
+.flag-strip span:nth-child(4){background:#fff}
 .flag-strip span:nth-child(5){background:#00843d}
-.header-inner{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;gap:12px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:11px}
-.brand-mark{background:var(--green);color:white;width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-weight:800}
-.brand h1{font-size:17px;margin:0;font-weight:800}
-.brand p{font-size:10px;color:var(--muted);margin:3px 0 0}
-.status{border:1px solid var(--line);border-radius:20px;padding:6px 10px;font-size:10px;color:var(--muted)}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#d69e2e;margin-right:5px}
+
+.header-inner{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:13px 18px;
+ gap:12px;
+ flex-wrap:wrap;
+}
+
+.brand{
+ display:flex;
+ align-items:center;
+ gap:11px;
+}
+
+.brand-mark{
+ background:var(--green);
+ color:white;
+ width:42px;
+ height:42px;
+ border-radius:10px;
+ display:grid;
+ place-items:center;
+ font-weight:800;
+}
+
+.brand h1{
+ font-size:17px;
+ margin:0;
+ font-weight:800;
+}
+
+.brand p{
+ font-size:10px;
+ color:var(--muted);
+ margin:3px 0 0;
+}
+
+.status{
+ border:1px solid var(--line);
+ border-radius:20px;
+ padding:6px 10px;
+ font-size:10px;
+ color:var(--muted);
+}
+
+.dot{
+ display:inline-block;
+ width:7px;
+ height:7px;
+ border-radius:50%;
+ background:#d69e2e;
+ margin-right:5px;
+}
+
 .dot.ready{background:#16a34a}
-main{display:grid;grid-template-columns:minmax(245px,280px) minmax(350px,1fr) minmax(260px,310px);gap:10px;padding:10px;height:calc(100vh - 76px);min-height:620px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:9px;min-height:0;overflow:hidden}
-.scroll{height:100%;overflow:auto;padding:13px}
+
+main{
+ display:grid;
+ grid-template-columns:minmax(245px,280px) minmax(350px,1fr) minmax(260px,320px);
+ gap:10px;
+ padding:10px;
+ height:calc(100vh - 76px);
+ min-height:650px;
+}
+
+.panel{
+ background:#fff;
+ border:1px solid var(--line);
+ border-radius:9px;
+ min-height:0;
+ overflow:hidden;
+}
+
+.scroll{
+ height:100%;
+ overflow:auto;
+ padding:13px;
+}
+
 .section{margin-bottom:18px}
-.section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px;color:#344256}
-label{display:block;font-size:11px;font-weight:700;color:#526174;margin:9px 0 5px}
+
+.section-title{
+ font-size:11px;
+ font-weight:800;
+ text-transform:uppercase;
+ letter-spacing:.6px;
+ margin:0 0 10px;
+ color:#344256;
+}
+
+label{
+ display:block;
+ font-size:11px;
+ font-weight:700;
+ color:#526174;
+ margin:9px 0 5px;
+}
+
 input,select,button{font:inherit;font-size:12px}
-input[type=text],select{width:100%;border:1px solid #d8e0e9;border-radius:6px;padding:8px;background:white;color:var(--ink)}
-input[type=file]{width:100%;font-size:10px;background:var(--soft);border:1px dashed #cbd5e1;padding:8px;border-radius:6px}
-button{border:0;border-radius:6px;padding:9px 11px;font-weight:700;cursor:pointer}
-button:disabled{opacity:.45;cursor:not-allowed}
+
+input[type=text],select{
+ width:100%;
+ border:1px solid #d8e0e9;
+ border-radius:6px;
+ padding:8px;
+ background:white;
+ color:var(--ink);
+}
+
+input[type=file]{
+ width:100%;
+ font-size:10px;
+ background:var(--soft);
+ border:1px dashed #cbd5e1;
+ padding:8px;
+ border-radius:6px;
+}
+
+button{
+ border:0;
+ border-radius:6px;
+ padding:9px 11px;
+ font-weight:700;
+ cursor:pointer;
+}
+
+button:disabled{
+ opacity:.45;
+ cursor:not-allowed;
+}
+
 .primary{background:var(--green);color:white}
 .secondary{background:#edf2f7;color:#344256}
 .danger{background:#fff0f1;color:#b42332}
-.btn-row{display:flex;gap:7px;margin-top:8px}
+
+.btn-row{
+ display:flex;
+ gap:7px;
+ margin-top:8px;
+}
+
 .btn-row button{flex:1}
-.help{font-size:10px;color:var(--muted);line-height:1.5;margin-top:6px}
-.note{padding:8px 9px;border-left:3px solid var(--green);background:#f0f7f2;color:#42604c;font-size:10px;line-height:1.5;margin-top:8px}
-.warning{padding:8px 9px;border-left:3px solid #d69e2e;background:#fff8e8;color:#765b22;font-size:10px;line-height:1.5;margin-top:8px}
-.layer-item{display:flex;align-items:center;gap:8px;margin:9px 0;font-size:11px;color:#405064}
+
+.help{
+ font-size:10px;
+ color:var(--muted);
+ line-height:1.5;
+ margin-top:6px;
+}
+
+.note{
+ padding:8px 9px;
+ border-left:3px solid var(--green);
+ background:#f0f7f2;
+ color:#42604c;
+ font-size:10px;
+ line-height:1.5;
+ margin-top:8px;
+}
+
+.warning{
+ padding:8px 9px;
+ border-left:3px solid #d69e2e;
+ background:#fff8e8;
+ color:#765b22;
+ font-size:10px;
+ line-height:1.5;
+ margin-top:8px;
+}
+
+.danger-note{
+ padding:8px 9px;
+ border-left:3px solid #ce1126;
+ background:#fff1f2;
+ color:#991b1b;
+ font-size:10px;
+ line-height:1.5;
+ margin-top:8px;
+}
+
+.layer-item{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ margin:9px 0;
+ font-size:11px;
+ color:#405064;
+}
+
 .layer-item input{accent-color:var(--green)}
 .layer-item span:first-of-type{flex:1}
-.tag{font-family:"DM Mono",monospace;font-size:9px;color:#64748b;background:#f1f5f9;padding:3px 5px;border-radius:4px}
-.map-panel{display:flex;flex-direction:column;position:relative}
-.map-toolbar{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;border-bottom:1px solid var(--line);gap:8px;flex-wrap:wrap}
-.map-toolbar strong{font-size:12px}
-#map{flex:1;min-height:300px;background:#e8edf1;cursor:crosshair}
-.map-footer{border-top:1px solid var(--line);padding:7px 10px;font-size:10px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.kpi{border:1px solid var(--line);border-radius:8px;padding:10px}
-.kpi .value{font-size:20px;font-weight:800;margin:3px 0;overflow-wrap:anywhere}
-.kpi .name{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
-.kpi .sub{font-size:9px;color:var(--muted)}
-.data-table{width:100%;border-collapse:collapse;font-size:10px}
-.data-table th,.data-table td{padding:7px 5px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-.data-table th{color:#64748b;font-size:9px;text-transform:uppercase}
-.data-table td{overflow-wrap:anywhere}
-.data-table tbody tr.sample-row{cursor:pointer}
-.data-table tbody tr.sample-row:hover{background:#f0f7f2}
-.data-table tbody tr.selected-row{background:#e9f5ed}
-.legend-item{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:10px}
-.swatch{width:13px;height:13px;border-radius:3px;border:1px solid #cbd5e1}
-#loadingOverlay{position:absolute;inset:0;background:#ffffffdf;display:none;align-items:center;justify-content:center;z-index:1000;text-align:center}
-.spinner{width:27px;height:27px;border:3px solid #dce8df;border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
-@keyframes spin{to{transform:rotate(360deg)}}
-#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:2000;background:#1e293b;color:white;padding:10px 15px;border-radius:7px;font-size:11px;display:none;max-width:90%;box-shadow:0 5px 20px #0002}
-footer{background:white;border-top:1px solid var(--line);text-align:center;padding:8px;font-size:9px;color:var(--muted)}
-.sample-help{background:#fff5f5;border:1px solid #fecaca;padding:8px;border-radius:6px;color:#991b1b;font-size:10px;line-height:1.5}
-.raw-details{font-size:9px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f7f9fb;padding:9px;border-radius:5px;max-height:280px;overflow:auto;margin-top:5px;color:#526174}
-.sample-marker-label{font-size:10px;font-weight:800;color:#b42332}
-@media(max-width:1050px){
-  main{grid-template-columns:260px minmax(300px,1fr);height:auto}
-  .right-panel{grid-column:1/-1}
-  .right-panel .scroll{height:auto;max-height:480px}
-  .map-panel{height:650px}
+
+.tag{
+ font-family:"DM Mono",monospace;
+ font-size:9px;
+ color:#64748b;
+ background:#f1f5f9;
+ padding:3px 5px;
+ border-radius:4px;
 }
+
+.map-panel{
+ display:flex;
+ flex-direction:column;
+ position:relative;
+}
+
+.map-toolbar{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:9px 11px;
+ border-bottom:1px solid var(--line);
+ gap:8px;
+ flex-wrap:wrap;
+}
+
+.map-toolbar strong{font-size:12px}
+
+#map{
+ flex:1;
+ min-height:300px;
+ background:#e8edf1;
+ cursor:crosshair;
+}
+
+.map-footer{
+ border-top:1px solid var(--line);
+ padding:7px 10px;
+ font-size:10px;
+ color:var(--muted);
+ display:flex;
+ justify-content:space-between;
+ gap:8px;
+ flex-wrap:wrap;
+}
+
+.kpis{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+}
+
+.kpi{
+ border:1px solid var(--line);
+ border-radius:8px;
+ padding:10px;
+}
+
+.kpi .value{
+ font-size:20px;
+ font-weight:800;
+ margin:3px 0;
+ overflow-wrap:anywhere;
+}
+
+.kpi .name{
+ color:var(--muted);
+ font-size:9px;
+ text-transform:uppercase;
+ letter-spacing:.5px;
+ font-weight:700;
+}
+
+.kpi .sub{
+ font-size:9px;
+ color:var(--muted);
+}
+
+.data-table{
+ width:100%;
+ border-collapse:collapse;
+ font-size:10px;
+}
+
+.data-table th,.data-table td{
+ padding:7px 5px;
+ border-bottom:1px solid var(--line);
+ text-align:left;
+ vertical-align:top;
+}
+
+.data-table th{
+ color:#64748b;
+ font-size:9px;
+ text-transform:uppercase;
+}
+
+.data-table td{overflow-wrap:anywhere}
+
+.sample-row{cursor:pointer}
+.sample-row:hover{background:#f0f7f2}
+
+.legend-item{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ margin:7px 0;
+ font-size:10px;
+}
+
+.swatch{
+ width:13px;
+ height:13px;
+ border-radius:3px;
+ border:1px solid #cbd5e1;
+ flex-shrink:0;
+}
+
+#loadingOverlay{
+ position:absolute;
+ inset:0;
+ background:#ffffffdf;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ z-index:1000;
+ text-align:center;
+}
+
+.spinner{
+ width:27px;
+ height:27px;
+ border:3px solid #dce8df;
+ border-top-color:var(--green);
+ border-radius:50%;
+ animation:spin .8s linear infinite;
+ margin:0 auto 10px;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#toast{
+ position:fixed;
+ bottom:18px;
+ left:50%;
+ transform:translateX(-50%);
+ z-index:2000;
+ background:#1e293b;
+ color:white;
+ padding:10px 15px;
+ border-radius:7px;
+ font-size:11px;
+ display:none;
+ max-width:90%;
+ box-shadow:0 5px 20px #0002;
+}
+
+footer{
+ background:white;
+ border-top:1px solid var(--line);
+ text-align:center;
+ padding:8px;
+ font-size:9px;
+ color:var(--muted);
+}
+
+.sample-help{
+ background:#fff5f5;
+ border:1px solid #fecaca;
+ padding:8px;
+ border-radius:6px;
+ color:#991b1b;
+ font-size:10px;
+ line-height:1.5;
+}
+
+.raw-details{
+ font-family:"DM Mono",monospace;
+ font-size:9px;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ background:#f7f9fb;
+ padding:9px;
+ border-radius:5px;
+ max-height:360px;
+ overflow:auto;
+ margin-top:7px;
+ color:#334155;
+ border:1px solid var(--line);
+}
+
+.diagnostic-status{
+ font-size:10px;
+ font-weight:700;
+ margin-top:6px;
+}
+
+.sample-marker-label{
+ font-size:10px;
+ font-weight:800;
+ color:#b42332;
+}
+
+.small-button{
+ padding:5px 7px;
+ font-size:9px;
+}
+
+@media(max-width:1050px){
+ main{
+  grid-template-columns:260px minmax(300px,1fr);
+  height:auto;
+ }
+ .right-panel{grid-column:1/-1}
+ .right-panel .scroll{
+  height:auto;
+  max-height:650px;
+ }
+ .map-panel{height:650px}
+}
+
 @media(max-width:680px){
-  main{display:flex;flex-direction:column;height:auto}
-  .map-panel{height:520px}
-  .right-panel .scroll{max-height:none}
+ main{
+  display:flex;
+  flex-direction:column;
+  height:auto;
+ }
+ .map-panel{height:520px}
+ .right-panel .scroll{max-height:none}
 }
 </style>
 </head>
 
 <body>
+
 <header>
-  <div class="flag-strip"><span></span><span></span><span></span><span></span><span></span></div>
-  <div class="header-inner">
-    <div class="brand">
-      <div class="brand-mark">GEO</div>
-      <div>
-        <h1>GBoS GEOAI</h1>
-        <p>GROUNDWATER & AGRICULTURAL LAND INTELLIGENCE • THE GAMBIA</p>
-      </div>
-    </div>
-    <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Loading administrative data</span></div>
+ <div class="flag-strip">
+  <span></span><span></span><span></span><span></span><span></span>
+ </div>
+
+ <div class="header-inner">
+  <div class="brand">
+   <div class="brand-mark">GEO</div>
+   <div>
+    <h1>GBoS GEOAI</h1>
+    <p>GROUNDWATER & AGRICULTURAL LAND INTELLIGENCE • THE GAMBIA</p>
+   </div>
   </div>
+
+  <div class="status">
+   <span class="dot" id="statusDot"></span>
+   <span id="statusText">Loading administrative data</span>
+  </div>
+ </div>
 </header>
 
 <main>
-  <!-- LEFT PANEL -->
-  <aside class="panel">
-    <div class="scroll">
 
-      <div class="section">
-        <div class="section-title">01. Administrative boundary</div>
-        <label>EA GeoJSON URL / file path</label>
-        <input id="adminUrl" type="text" value="./Census_EAs_Geo.json">
-        <div class="btn-row">
-          <button class="primary" id="loadUrlBtn">Load EA JSON</button>
-          <button class="secondary" id="clearAdminBtn">Clear</button>
-        </div>
-        <label>Or upload Census_EAs_Geo.json</label>
-        <input type="file" id="adminFile" accept=".json,.geojson,application/json">
-        <div class="note">Region: RCO | District: distname | Ward: wardname | EA: eaname / feacode.</div>
-      </div>
+<!-- LEFT PANEL -->
 
-      <div class="section">
-        <div class="section-title">02. Administrative selection</div>
-        <label>Region</label>
-        <select id="regionSelect" disabled><option value="">Load EA data first</option></select>
-        <label>District</label>
-        <select id="districtSelect" disabled><option value="">All districts</option></select>
-        <label>Ward</label>
-        <select id="wardSelect" disabled><option value="">All wards</option></select>
-        <label>Enumeration Area</label>
-        <select id="eaSelect" disabled><option value="">All EAs</option></select>
-        <div class="btn-row">
-          <button class="primary" id="applyAreaBtn" disabled>Apply / Zoom</button>
-          <button class="secondary" id="resetAreaBtn" disabled>Reset</button>
-        </div>
-        <div class="help" id="areaInfo">Load the EA GeoJSON to activate selectors.</div>
-      </div>
+<aside class="panel">
+<div class="scroll">
 
-      <div class="section">
-        <div class="section-title">03. Online data layers</div>
-        <label class="layer-item"><input type="checkbox" id="showSec"><span>BGS groundwater SEC</span><span class="tag">µS/cm</span></label>
-        <label class="layer-item"><input type="checkbox" id="showDepth"><span>BGS groundwater depth</span><span class="tag">mbgl</span></label>
-        <label class="layer-item"><input type="checkbox" id="showWorldCover"><span>ESA WorldCover 2021</span><span class="tag">10 m</span></label>
-        <label class="layer-item"><input type="checkbox" id="showAdmin" checked><span>Administrative boundary</span></label>
-        <div class="help">Online layers are loaded only when switched on. Enable SEC and/or depth before capturing a point to request BGS values.</div>
-      </div>
+ <div class="section">
+  <div class="section-title">01. Administrative boundary</div>
 
-      <div class="section">
-        <div class="section-title">04. Map display</div>
-        <label>Basemap</label>
-        <select id="basemapSelect">
-          <option value="street">Street map</option>
-          <option value="satellite">Satellite imagery</option>
-          <option value="hybrid">Hybrid</option>
-          <option value="terrain">Terrain</option>
-        </select>
-        <label>Boundary display</label>
-        <select id="boundaryStyle">
-          <option value="region">Region outline</option>
-          <option value="district">District outline</option>
-          <option value="ward">Ward outline</option>
-          <option value="ea">EA boundaries</option>
-        </select>
-      </div>
+  <label>EA GeoJSON URL / file path</label>
+  <input id="adminUrl" type="text" value="./Census_EAs_Geo.json">
 
-      <div class="section">
-        <div class="section-title">05. Sample point collection</div>
-        <div class="sample-help"><b>Click anywhere on the map.</b> A red marker appears and its coordinates are recorded immediately, even if BGS layers are switched off.</div>
-        <div class="btn-row">
-          <button class="secondary" id="exportSamplesBtn">Export CSV</button>
-          <button class="secondary" id="exportGeoJSONBtn">Export GeoJSON</button>
-        </div>
-        <div class="btn-row">
-          <button class="danger" id="clearSamplesBtn">Clear all sample points</button>
-        </div>
-        <div class="help">The BGS values are requested for the layers enabled at the time the sample is captured. Turning a layer on later does not automatically query earlier samples.</div>
-      </div>
+  <div class="btn-row">
+   <button class="primary" id="loadUrlBtn">Load EA JSON</button>
+   <button class="secondary" id="clearAdminBtn">Clear</button>
+  </div>
 
-    </div>
-  </aside>
+  <label>Or upload Census_EAs_Geo.json</label>
+  <input type="file" id="adminFile" accept=".json,.geojson,application/json">
 
-  <!-- MAP -->
-  <section class="panel map-panel">
-    <div class="map-toolbar">
-      <strong>Interactive Groundwater & Land-Cover Map</strong>
-      <span class="tag" id="mapAreaLabel">THE GAMBIA</span>
-    </div>
-    <div id="map"></div>
-    <div id="loadingOverlay">
-      <div><div class="spinner"></div><strong id="loadingMessage">Loading...</strong></div>
-    </div>
-    <div class="map-footer">
-      <span id="mapCoordinates">Move over the map to view coordinates</span>
-      <span>WGS84 • EPSG:4326</span>
-    </div>
-  </section>
+  <div class="note">
+   Administrative fields are detected automatically:
+   RCO, distname, wardname, eaname and feacode.
+  </div>
+ </div>
 
-  <!-- RIGHT PANEL -->
-  <aside class="panel right-panel">
-    <div class="scroll">
+ <div class="section">
+  <div class="section-title">02. Administrative selection</div>
 
-      <div class="section">
-        <div class="section-title">01. Area statistics</div>
-        <div class="kpis">
-          <div class="kpi"><div class="name">EA features</div><div class="value" id="kpiEAs">—</div><div class="sub">Loaded GeoJSON</div></div>
-          <div class="kpi"><div class="name">Selected EAs</div><div class="value" id="kpiSelected">—</div><div class="sub">Current selection</div></div>
-          <div class="kpi"><div class="name">Regions</div><div class="value" id="kpiRegions">—</div><div class="sub">Unique regions</div></div>
-          <div class="kpi"><div class="name">Sample points</div><div class="value" id="kpiSamples">0</div><div class="sub">Captured map clicks</div></div>
-        </div>
-      </div>
+  <label>Region</label>
+  <select id="regionSelect" disabled>
+   <option value="">Load EA data first</option>
+  </select>
 
-      <div class="section">
-        <div class="section-title">02. Current selection</div>
-        <table class="data-table"><tbody>
-          <tr><th>Region</th><td id="statRegion">All</td></tr>
-          <tr><th>District</th><td id="statDistrict">All</td></tr>
-          <tr><th>Ward</th><td id="statWard">All</td></tr>
-          <tr><th>EA</th><td id="statEA">All</td></tr>
-          <tr><th>Selected features</th><td id="statCount">—</td></tr>
-        </tbody></table>
-      </div>
+  <label>District</label>
+  <select id="districtSelect" disabled>
+   <option value="">All districts</option>
+  </select>
 
-      <div class="section">
-        <div class="section-title">03. Captured sample points</div>
-        <table class="data-table">
-          <thead><tr><th>Coordinates</th><th>SEC</th><th>Depth</th></tr></thead>
-          <tbody id="sampleTable"><tr><td colspan="3">No sample points captured.</td></tr></tbody>
-        </table>
-        <div class="help">Click a sample row to zoom to its location and inspect the complete BGS response.</div>
-      </div>
+  <label>Ward</label>
+  <select id="wardSelect" disabled>
+   <option value="">All wards</option>
+  </select>
 
-      <div class="section">
-        <div class="section-title">04. BGS response diagnostics</div>
-        <div class="help" id="diagnosticHelp">Diagnostics will display automatically when a sample is captured or queried. Select a sample row to inspect it again.</div>
-        <div id="diagnosticPanel" class="raw-details">No sample point has been captured yet.</div>
-      </div>
+  <label>Enumeration Area</label>
+  <select id="eaSelect" disabled>
+   <option value="">All EAs</option>
+  </select>
 
-      <div class="section">
-        <div class="section-title">05. WorldCover classes</div>
-        <div class="legend-item"><span class="swatch" style="background:#006400"></span>Tree cover</div>
-        <div class="legend-item"><span class="swatch" style="background:#ffbb22"></span>Shrubland</div>
-        <div class="legend-item"><span class="swatch" style="background:#ffff4c"></span>Grassland</div>
-        <div class="legend-item"><span class="swatch" style="background:#f096ff"></span>Cropland</div>
-        <div class="legend-item"><span class="swatch" style="background:#fa0000"></span>Built-up</div>
-        <div class="legend-item"><span class="swatch" style="background:#b4b4b4"></span>Bare / sparse vegetation</div>
-        <div class="legend-item"><span class="swatch" style="background:#0064c8"></span>Permanent water</div>
-        <div class="legend-item"><span class="swatch" style="background:#0096a0"></span>Herbaceous wetland</div>
-        <div class="legend-item"><span class="swatch" style="background:#00cf75"></span>Mangroves</div>
-        <div class="legend-item"><span class="swatch" style="background:#fae6a0"></span>Moss / lichen</div>
-      </div>
+  <div class="btn-row">
+   <button class="primary" id="applyAreaBtn" disabled>Apply / Zoom</button>
+   <button class="secondary" id="resetAreaBtn" disabled>Reset</button>
+  </div>
 
-      <div class="section">
-        <div class="section-title">06. Methodological notes</div>
-        <div class="warning">BGS SEC is a groundwater electrical-conductivity indicator, not a directly mapped fresh–saltwater interface.</div>
-        <div class="warning">ESA WorldCover identifies land-cover classes. Cropland is not equivalent to agricultural suitability or crop productivity.</div>
-        <div class="help">This dashboard provides map visualisation, point identification and sample export. It does not calculate a validated pixel-level groundwater–agriculture suitability overlay.</div>
-      </div>
+  <div class="help" id="areaInfo">
+   Load the EA GeoJSON to activate selectors.
+  </div>
+ </div>
 
-    </div>
-  </aside>
+ <div class="section">
+  <div class="section-title">03. Online data layers</div>
+
+  <label class="layer-item">
+   <input type="checkbox" id="showSec">
+   <span>BGS groundwater SEC</span>
+   <span class="tag">µS/cm</span>
+  </label>
+
+  <label class="layer-item">
+   <input type="checkbox" id="showDepth">
+   <span>BGS groundwater depth</span>
+   <span class="tag">mbgl</span>
+  </label>
+
+  <label class="layer-item">
+   <input type="checkbox" id="showWorldCover">
+   <span>ESA WorldCover 2021</span>
+   <span class="tag">10 m</span>
+  </label>
+
+  <label class="layer-item">
+   <input type="checkbox" id="showAdmin" checked>
+   <span>Administrative boundary</span>
+  </label>
+
+  <div class="help">
+   Online layers are loaded only when switched on.
+  </div>
+ </div>
+
+ <div class="section">
+  <div class="section-title">04. Map display</div>
+
+  <label>Basemap</label>
+  <select id="basemapSelect">
+   <option value="street">Street map</option>
+   <option value="satellite">Satellite imagery</option>
+   <option value="hybrid">Hybrid</option>
+   <option value="terrain">Terrain</option>
+  </select>
+
+  <label>Boundary display</label>
+  <select id="boundaryStyle">
+   <option value="region">Region outline</option>
+   <option value="district">District outline</option>
+   <option value="ward">Ward outline</option>
+   <option value="ea">EA boundaries</option>
+  </select>
+ </div>
+
+ <div class="section">
+  <div class="section-title">05. Sample point collection</div>
+
+  <div class="sample-help">
+   <b>Click anywhere on the map.</b>
+   A red marker is created and its coordinates are recorded.
+   Enable SEC and/or depth before clicking to request BGS Identify results.
+  </div>
+
+  <div class="btn-row">
+   <button class="secondary" id="exportSamplesBtn">Export CSV</button>
+   <button class="secondary" id="exportGeoJSONBtn">Export GeoJSON</button>
+  </div>
+
+  <div class="btn-row">
+   <button class="danger" id="clearSamplesBtn">Clear all sample points</button>
+  </div>
+
+  <div class="help">
+   The dashboard stores the raw BGS response for each sample.
+  </div>
+ </div>
+
+</div>
+</aside>
+
+<!-- MAP -->
+
+<section class="panel map-panel">
+
+ <div class="map-toolbar">
+  <strong>Interactive Groundwater & Land-Cover Map</strong>
+  <span class="tag" id="mapAreaLabel">THE GAMBIA</span>
+ </div>
+
+ <div id="map"></div>
+
+ <div id="loadingOverlay">
+  <div>
+   <div class="spinner"></div>
+   <strong id="loadingMessage">Loading...</strong>
+  </div>
+ </div>
+
+ <div class="map-footer">
+  <span id="mapCoordinates">Move over the map to view coordinates</span>
+  <span>WGS84 • EPSG:4326</span>
+ </div>
+
+</section>
+
+<!-- RIGHT PANEL -->
+
+<aside class="panel right-panel">
+<div class="scroll">
+
+ <div class="section">
+  <div class="section-title">01. Area statistics</div>
+
+  <div class="kpis">
+   <div class="kpi">
+    <div class="name">EA features</div>
+    <div class="value" id="kpiEAs">—</div>
+    <div class="sub">Loaded GeoJSON</div>
+   </div>
+
+   <div class="kpi">
+    <div class="name">Selected EAs</div>
+    <div class="value" id="kpiSelected">—</div>
+    <div class="sub">Current selection</div>
+   </div>
+
+   <div class="kpi">
+    <div class="name">Regions</div>
+    <div class="value" id="kpiRegions">—</div>
+    <div class="sub">Unique regions</div>
+   </div>
+
+   <div class="kpi">
+    <div class="name">Sample points</div>
+    <div class="value" id="kpiSamples">0</div>
+    <div class="sub">Captured map clicks</div>
+   </div>
+  </div>
+ </div>
+
+ <div class="section">
+  <div class="section-title">02. Current selection</div>
+
+  <table class="data-table">
+   <tbody>
+    <tr><th>Region</th><td id="statRegion">All</td></tr>
+    <tr><th>District</th><td id="statDistrict">All</td></tr>
+    <tr><th>Ward</th><td id="statWard">All</td></tr>
+    <tr><th>EA</th><td id="statEA">All</td></tr>
+    <tr><th>Selected features</th><td id="statCount">—</td></tr>
+   </tbody>
+  </table>
+ </div>
+
+ <div class="section">
+  <div class="section-title">03. Captured sample points</div>
+
+  <table class="data-table">
+   <thead>
+    <tr>
+     <th>Coordinates</th>
+     <th>SEC</th>
+     <th>Depth</th>
+    </tr>
+   </thead>
+   <tbody id="sampleTable">
+    <tr><td colspan="3">No sample points captured.</td></tr>
+   </tbody>
+  </table>
+
+  <div class="help">
+   Select a row to inspect its stored BGS response.
+  </div>
+ </div>
+
+ <div class="section">
+  <div class="section-title">04. BGS response diagnostics</div>
+
+  <div class="help">
+   The exact Identify response is retained for each sample.
+   SEC and depth pixel codes are displayed separately from their
+   interpreted measurements.
+  </div>
+
+  <div id="diagnosticStatus" class="diagnostic-status">
+   No BGS response inspected yet.
+  </div>
+
+  <div id="diagnosticPanel" class="raw-details">
+   Capture a sample point with a BGS layer enabled.
+  </div>
+ </div>
+
+ <div class="section">
+  <div class="section-title">05. WorldCover classes</div>
+
+  <div id="worldCoverLegend"></div>
+
+  <div class="help">
+   ESA WorldCover 2021 class codes and colours.
+   Class values are categorical land-cover identifiers.
+  </div>
+ </div>
+
+ <div class="section">
+  <div class="section-title">06. Methodological notes</div>
+
+  <div class="warning">
+   BGS SEC represents electrical conductivity information.
+   A pixel code of zero with a blank Raster.SEC attribute is not
+   sufficient evidence of zero conductivity or freshwater.
+  </div>
+
+  <div class="warning">
+   Groundwater pixel codes should not automatically be interpreted
+   as measurements in metres below ground level. Preserve the
+   returned raster attributes and verify their meaning against
+   the BGS layer documentation.
+  </div>
+
+  <div class="warning">
+   ESA WorldCover identifies land-cover classes. Cropland is not
+   equivalent to agricultural suitability or crop productivity.
+  </div>
+
+  <div class="help">
+   This dashboard provides map visualisation, point identification,
+   response diagnostics and sample exports. It does not calculate
+   a validated groundwater–agriculture suitability index.
+  </div>
+ </div>
+
+</div>
+</aside>
+
 </main>
 
 <footer>
-  Produced by Ansu Singhateh | GIS Analyst | GIS / Cartography Unit | Gambia Bureau of Statistics |
-  GBoS GEOAI • Research and educational use
+ Produced by Ansu Singhateh | GIS Analyst | GIS / Cartography Unit |
+ Gambia Bureau of Statistics | GBoS GEOAI • Research and educational use
 </footer>
 
 <div id="toast"></div>
@@ -281,22 +803,24 @@ footer{background:white;border-top:1px solid var(--line);text-align:center;paddi
 <script src="https://unpkg.com/esri-leaflet@3.0.15/dist/esri-leaflet.js"></script>
 
 <script>
-"use strict";
 
 /* =========================================================
    CONFIGURATION
 ========================================================= */
 
 const BGS_SERVICE =
-  "https://map.bgs.ac.uk/arcgis/rest/services/Africa_Groundwater/Africa_Groundwater_v2/MapServer";
+ "https://map.bgs.ac.uk/arcgis/rest/services/Africa_Groundwater/Africa_Groundwater_v2/MapServer";
 
 const BGS_LAYERS = {
-  SEC: 11,
-  DEPTH: 1
+ SEC:11,
+ DEPTH:1
 };
 
-const WORLD_COVER_WMS = "https://services.terrascope.be/wms/v2";
-const WORLD_COVER_LAYER = "WORLDCOVER_2021_MAP";
+const WORLD_COVER_WMS =
+ "https://services.terrascope.be/wms/v2";
+
+const WORLD_COVER_LAYER =
+ "WORLDCOVER_2021_MAP";
 
 const DB_NAME = "GBOS_GEOAI_ADMIN_CACHE";
 const DB_STORE = "geojson";
@@ -309,1203 +833,1725 @@ let samples = [];
 let adminFields = {};
 let markerCounter = 0;
 let activeBaseLayer = null;
-let selectedSampleId = null;
-
-const sampleMarkers = L.layerGroup();
 
 /* =========================================================
-   MAP
+   WORLD COVER CLASS DEFINITIONS
 ========================================================= */
 
-const map = L.map("map", {
-  zoomControl: true,
-  preferCanvas: true,
-  zoomAnimation: false
-}).setView([13.45, -15.45], 8);
+const WORLD_COVER_CLASSES = [
+ {code:10,name:"Tree cover",color:"#006400"},
+ {code:20,name:"Shrubland",color:"#ffbb22"},
+ {code:30,name:"Grassland",color:"#ffff4c"},
+ {code:40,name:"Cropland",color:"#f096ff"},
+ {code:50,name:"Built-up",color:"#fa0000"},
+ {code:60,name:"Bare / sparse vegetation",color:"#b4b4b4"},
+ {code:70,name:"Snow and ice",color:"#f0f0f0"},
+ {code:80,name:"Permanent water bodies",color:"#0064c8"},
+ {code:90,name:"Herbaceous wetland",color:"#0096a0"},
+ {code:95,name:"Mangroves",color:"#00cf75"},
+ {code:100,name:"Moss and lichen",color:"#fae6a0"}
+];
+
+/* =========================================================
+   MAP INITIALISATION
+========================================================= */
+
+const map = L.map("map",{
+ zoomControl:true,
+ preferCanvas:true,
+ zoomAnimation:false
+}).setView([13.45,-15.45],8);
 
 const baseLayers = {
-  street: L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {maxZoom:19, attribution:"© OpenStreetMap"}
-  ),
 
-  satellite: L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    {maxZoom:19, attribution:"Tiles © Esri"}
-  ),
+ street:L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+   maxZoom:19,
+   attribution:"© OpenStreetMap"
+  }
+ ),
 
-  terrain: L.tileLayer(
-    "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-    {maxZoom:17, attribution:"© OpenTopoMap"}
-  )
+ satellite:L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+   maxZoom:19,
+   attribution:"Tiles © Esri"
+  }
+ ),
+
+ terrain:L.tileLayer(
+  "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+  {
+   maxZoom:17,
+   attribution:"© OpenTopoMap"
+  }
+ )
+
 };
 
 baseLayers.hybrid = L.layerGroup([
-  baseLayers.satellite,
-  L.tileLayer(
-    "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-    {maxZoom:19, attribution:"Esri"}
-  )
+ baseLayers.satellite,
+ L.tileLayer(
+  "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+  {
+   maxZoom:19,
+   attribution:"Esri"
+  }
+ )
 ]);
 
 activeBaseLayer = baseLayers.street.addTo(map);
 
 const secLayer = L.esri.dynamicMapLayer({
-  url: BGS_SERVICE,
-  layers: [BGS_LAYERS.SEC],
-  opacity: .78
+ url:BGS_SERVICE,
+ layers:[BGS_LAYERS.SEC],
+ opacity:.78
 });
 
 const depthLayer = L.esri.dynamicMapLayer({
-  url: BGS_SERVICE,
-  layers: [BGS_LAYERS.DEPTH],
-  opacity: .75
+ url:BGS_SERVICE,
+ layers:[BGS_LAYERS.DEPTH],
+ opacity:.75
 });
 
-const worldCoverLayer = L.tileLayer.wms(WORLD_COVER_WMS, {
-  layers: WORLD_COVER_LAYER,
-  format: "image/png",
-  transparent: true,
-  version: "1.1.1",
-  opacity: .75,
-  attribution: "ESA WorldCover / Terrascope"
+const worldCoverLayer = L.tileLayer.wms(WORLD_COVER_WMS,{
+ layers:WORLD_COVER_LAYER,
+ format:"image/png",
+ transparent:true,
+ version:"1.1.1",
+ opacity:.75,
+ attribution:"ESA WorldCover / Terrascope"
 });
 
-sampleMarkers.addTo(map);
+const sampleMarkers = L.layerGroup().addTo(map);
 
 /* =========================================================
    GENERAL HELPERS
 ========================================================= */
 
-function toast(message) {
-  const el = document.getElementById("toast");
-  el.textContent = message;
-  el.style.display = "block";
-  clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => el.style.display = "none", 4000);
+function toast(message){
+ const el = document.getElementById("toast");
+ el.textContent = message;
+ el.style.display = "block";
+
+ clearTimeout(toast.timer);
+
+ toast.timer = setTimeout(()=>{
+  el.style.display = "none";
+ },4000);
 }
 
-function setLoading(show, message) {
-  document.getElementById("loadingOverlay").style.display =
-    show ? "flex" : "none";
-  if (message) {
-    document.getElementById("loadingMessage").textContent = message;
-  }
+function setLoading(show,message){
+ document.getElementById("loadingOverlay").style.display =
+  show ? "flex" : "none";
+
+ if(message){
+  document.getElementById("loadingMessage").textContent = message;
+ }
 }
 
-function setStatus(message, ready=false) {
-  document.getElementById("statusText").textContent = message;
-  document.getElementById("statusDot").classList.toggle("ready", ready);
+function setStatus(message,ready=false){
+ document.getElementById("statusText").textContent = message;
+ document.getElementById("statusDot").classList.toggle("ready",ready);
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#039;"
-  }[ch]));
+function escapeHTML(value){
+ return String(value ?? "").replace(/[&<>"']/g,ch=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#039;"
+ }[ch]));
 }
 
-function normaliseKey(value) {
-  return String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+function normaliseKey(value){
+ return String(value || "").toLowerCase().replace(/[^a-z0-9]/g,"");
 }
 
-function findField(properties, candidates) {
-  const keys = Object.keys(properties || {});
-  for (const candidate of candidates) {
-    const found = keys.find(k =>
-      normaliseKey(k) === normaliseKey(candidate)
-    );
-    if (found) return found;
-  }
-  return null;
-}
+function findField(properties,candidates){
+ const keys = Object.keys(properties || {});
 
-function detectFields(feature) {
-  const p = feature.properties || {};
-  return {
-    region: findField(p, ["RCO","region","regionname","region_name","admin1","adm1"]),
-    district: findField(p, ["distname","district","districtname","district_name","admin2","adm2"]),
-    ward: findField(p, ["wardname","ward","ward_name","admin3","adm3"]),
-    eaName: findField(p, ["eaname","ea_name","enumeration_area","ea"]),
-    eaCode: findField(p, ["feacode","ea_code","eacode","code"])
-  };
-}
-
-function uniqueValues(features, field) {
-  const values = new Set();
-  if (!field) return [];
-
-  features.forEach(f => {
-    const value = f.properties?.[field];
-    if (value !== null && value !== undefined && String(value).trim() !== "") {
-      values.add(String(value).trim());
-    }
-  });
-
-  return [...values].sort((a,b) =>
-    a.localeCompare(b, undefined, {numeric:true})
+ for(const candidate of candidates){
+  const found = keys.find(k=>
+   normaliseKey(k) === normaliseKey(candidate)
   );
+
+  if(found) return found;
+ }
+
+ return null;
 }
 
-function setOptions(id, values, placeholder) {
-  const select = document.getElementById(id);
-  select.innerHTML = "";
+function detectFields(feature){
+ const p = feature.properties || {};
 
-  const first = document.createElement("option");
-  first.value = "";
-  first.textContent = placeholder;
-  select.appendChild(first);
+ return {
+  region:findField(p,[
+   "RCO","region","regionname","region_name","admin1","adm1"
+  ]),
 
-  values.forEach(value => {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = value;
-    select.appendChild(option);
-  });
+  district:findField(p,[
+   "distname","district","districtname","district_name","admin2","adm2"
+  ]),
+
+  ward:findField(p,[
+   "wardname","ward","ward_name","admin3","adm3"
+  ]),
+
+  eaName:findField(p,[
+   "eaname","ea_name","enumeration_area","ea"
+  ]),
+
+  eaCode:findField(p,[
+   "feacode","ea_code","eacode","code"
+  ])
+ };
+}
+
+function uniqueValues(features,field){
+ const values = new Set();
+
+ if(!field) return [];
+
+ features.forEach(f=>{
+  const value = f.properties?.[field];
+
+  if(value !== null && value !== undefined &&
+     String(value).trim() !== ""){
+   values.add(String(value).trim());
+  }
+ });
+
+ return [...values].sort((a,b)=>
+  a.localeCompare(b,undefined,{numeric:true})
+ );
+}
+
+function setOptions(id,values,placeholder){
+ const select = document.getElementById(id);
+
+ select.innerHTML = "";
+
+ const first = document.createElement("option");
+ first.value = "";
+ first.textContent = placeholder;
+
+ select.appendChild(first);
+
+ values.forEach(value=>{
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = value;
+  select.appendChild(option);
+ });
+}
+
+function formatNumber(value){
+ if(value === null || value === undefined || value === ""){
+  return "—";
+ }
+
+ return Number(value).toLocaleString();
+}
+
+function formatCoordinate(value){
+ return Number(value).toFixed(6);
 }
 
 /* =========================================================
    INDEXEDDB CACHE
 ========================================================= */
 
-function openCacheDB() {
-  return new Promise((resolve,reject) => {
-    const request = indexedDB.open(DB_NAME,1);
+function openCacheDB(){
+ return new Promise((resolve,reject)=>{
 
-    request.onupgradeneeded = () => {
-      if (!request.result.objectStoreNames.contains(DB_STORE)) {
-        request.result.createObjectStore(DB_STORE);
-      }
-    };
+  const request = indexedDB.open(DB_NAME,1);
 
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
+  request.onupgradeneeded = ()=>{
+   if(!request.result.objectStoreNames.contains(DB_STORE)){
+    request.result.createObjectStore(DB_STORE);
+   }
+  };
+
+  request.onsuccess = ()=>resolve(request.result);
+  request.onerror = ()=>reject(request.error);
+
+ });
+}
+
+async function getCachedGeoJSON(){
+ try{
+  const db = await openCacheDB();
+
+  return await new Promise((resolve,reject)=>{
+
+   const request = db.transaction(DB_STORE,"readonly")
+    .objectStore(DB_STORE).get(DB_KEY);
+
+   request.onsuccess = ()=>resolve(request.result || null);
+   request.onerror = ()=>reject(request.error);
+
   });
+
+ }catch(e){
+  return null;
+ }
 }
 
-async function getCachedGeoJSON() {
-  try {
-    const db = await openCacheDB();
+async function saveCachedGeoJSON(value){
+ try{
+  const db = await openCacheDB();
 
-    return await new Promise((resolve,reject) => {
-      const request = db.transaction(DB_STORE,"readonly")
-        .objectStore(DB_STORE).get(DB_KEY);
+  await new Promise((resolve,reject)=>{
 
-      request.onsuccess = () => resolve(request.result || null);
-      request.onerror = () => reject(request.error);
-    });
-  } catch (e) {
-    return null;
-  }
+   const tx = db.transaction(DB_STORE,"readwrite");
+
+   tx.objectStore(DB_STORE).put(value,DB_KEY);
+
+   tx.oncomplete = resolve;
+   tx.onerror = ()=>reject(tx.error);
+
+  });
+
+ }catch(e){
+  console.warn("Cache error:",e);
+ }
 }
 
-async function saveCachedGeoJSON(value) {
-  try {
-    const db = await openCacheDB();
+async function clearCachedGeoJSON(){
+ try{
+  const db = await openCacheDB();
 
-    await new Promise((resolve,reject) => {
-      const tx = db.transaction(DB_STORE,"readwrite");
-      tx.objectStore(DB_STORE).put(value,DB_KEY);
-      tx.oncomplete = resolve;
-      tx.onerror = () => reject(tx.error);
-    });
-  } catch (e) {
-    console.warn("Cache save failed:",e);
-  }
+  await new Promise(resolve=>{
+
+   const tx = db.transaction(DB_STORE,"readwrite");
+
+   tx.objectStore(DB_STORE).delete(DB_KEY);
+
+   tx.oncomplete = resolve;
+   tx.onerror = resolve;
+
+  });
+
+ }catch(e){}
 }
 
-async function clearCachedGeoJSON() {
-  try {
-    const db = await openCacheDB();
+/* =========================================================
+   WORLD COVER LEGEND
+========================================================= */
 
-    await new Promise(resolve => {
-      const tx = db.transaction(DB_STORE,"readwrite");
-      tx.objectStore(DB_STORE).delete(DB_KEY);
-      tx.oncomplete = resolve;
-      tx.onerror = resolve;
-    });
-  } catch (e) {}
+function buildWorldCoverLegend(){
+
+ const container = document.getElementById("worldCoverLegend");
+
+ container.innerHTML = "";
+
+ WORLD_COVER_CLASSES.forEach(item=>{
+
+  const row = document.createElement("div");
+  row.className = "legend-item";
+
+  row.innerHTML = `
+   <span class="swatch" style="background:${item.color}"></span>
+   <span>${item.code} — ${escapeHTML(item.name)}</span>
+  `;
+
+  container.appendChild(row);
+
+ });
+
 }
 
 /* =========================================================
    ADMINISTRATIVE DATA
 ========================================================= */
 
-function validateGeoJSON(data) {
-  if (!data || data.type !== "FeatureCollection" ||
-      !Array.isArray(data.features)) {
-    throw new Error("Invalid GeoJSON FeatureCollection.");
-  }
+function validateGeoJSON(data){
 
-  if (!data.features.length) {
-    throw new Error("GeoJSON contains no features.");
-  }
+ if(!data || !Array.isArray(data.features)){
+  throw new Error("The uploaded file is not a valid GeoJSON FeatureCollection.");
+ }
 
-  return data;
+ if(data.features.length === 0){
+  throw new Error("The GeoJSON contains no features.");
+ }
+
+ const valid = data.features.filter(f=>
+  f &&
+  f.type === "Feature" &&
+  f.geometry &&
+  f.properties
+ );
+
+ if(!valid.length){
+  throw new Error("No valid GeoJSON features were found.");
+ }
+
+ return {
+  type:"FeatureCollection",
+  features:valid
+ };
 }
 
-async function loadAdminURL(url) {
-  if (!url) {
-    toast("Enter a GeoJSON URL.");
-    return;
+async function loadGeoJSON(data){
+
+ try{
+
+  const clean = validateGeoJSON(data);
+
+  adminData = clean;
+  adminFields = detectFields(clean.features[0]);
+
+  if(!adminFields.region){
+   throw new Error("Could not detect the region field. Expected RCO or region.");
   }
 
-  setLoading(true,"Loading Census EA boundaries...");
-  setStatus("Loading administrative data");
-
-  try {
-    const cached = await getCachedGeoJSON();
-    let data = null;
-
-    if (cached && cached.url === url && cached.data) {
-      data = cached.data;
-    } else {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("HTTP " + response.status);
-
-      data = await response.json();
-      validateGeoJSON(data);
-      await saveCachedGeoJSON({url,data});
-    }
-
-    initialiseAdmin(data);
-    toast("Census EA boundaries loaded.");
-
-  } catch (error) {
-    console.error(error);
-    toast("Could not load EA GeoJSON: " + error.message);
-    setStatus("Administrative data not loaded");
-  } finally {
-    setLoading(false);
+  if(selectedBoundaryLayer){
+   map.removeLayer(selectedBoundaryLayer);
+   selectedBoundaryLayer = null;
   }
-}
 
-function initialiseAdmin(data) {
-  adminData = validateGeoJSON(data);
+  filteredFeatures = clean.features.slice();
 
-  const first = adminData.features.find(f => f.properties);
-  if (!first) throw new Error("No feature properties found.");
-
-  adminFields = detectFields(first);
-
-  if (!adminFields.region || !adminFields.district || !adminFields.ward) {
-    throw new Error("Required fields RCO, distname and wardname were not detected.");
-  }
+  populateRegionSelector();
+  applyAdministrativeFilter();
 
   document.getElementById("kpiEAs").textContent =
-    adminData.features.length.toLocaleString();
+   formatNumber(clean.features.length);
 
   document.getElementById("kpiRegions").textContent =
-    uniqueValues(adminData.features,adminFields.region).length;
-
-  populateRegions();
-
-  ["regionSelect","districtSelect","wardSelect","eaSelect"].forEach(id => {
-    document.getElementById(id).disabled = false;
-  });
+   formatNumber(uniqueValues(clean.features,adminFields.region).length);
 
   document.getElementById("applyAreaBtn").disabled = false;
   document.getElementById("resetAreaBtn").disabled = false;
 
-  document.getElementById("areaInfo").textContent =
-    adminData.features.length.toLocaleString() +
-    " EA features loaded. Fields: " +
-    adminFields.region + ", " +
-    adminFields.district + ", " +
-    adminFields.ward + ".";
+  await saveCachedGeoJSON(clean);
 
-  setStatus("EA administrative data ready",true);
-  applySelection(false);
+  setStatus("Administrative data loaded",true);
+
+  toast("EA GeoJSON loaded successfully.");
+
+ }catch(error){
+
+  console.error(error);
+  setStatus("Administrative data error",false);
+  toast(error.message);
+
+ }
 }
 
-function populateRegions() {
-  setOptions(
-    "regionSelect",
-    uniqueValues(adminData.features,adminFields.region),
-    "All regions"
+function populateRegionSelector(){
+
+ const regions = uniqueValues(
+  adminData.features,
+  adminFields.region
+ );
+
+ setOptions("regionSelect",regions,"All regions");
+
+ document.getElementById("regionSelect").disabled = false;
+ document.getElementById("districtSelect").disabled = false;
+ document.getElementById("wardSelect").disabled = false;
+ document.getElementById("eaSelect").disabled = false;
+
+ updateDependentSelectors();
+}
+
+function updateDependentSelectors(){
+
+ if(!adminData) return;
+
+ const region = document.getElementById("regionSelect").value;
+ const district = document.getElementById("districtSelect").value;
+ const ward = document.getElementById("wardSelect").value;
+
+ let features = adminData.features;
+
+ if(region){
+  features = features.filter(f=>
+   String(f.properties?.[adminFields.region]) === region
   );
+ }
 
-  setOptions("districtSelect",[],"All districts");
-  setOptions("wardSelect",[],"All wards");
-  setOptions("eaSelect",[],"All EAs");
-}
+ const districts = uniqueValues(features,adminFields.district);
 
-document.getElementById("loadUrlBtn").addEventListener("click",() => {
-  loadAdminURL(document.getElementById("adminUrl").value.trim());
-});
+ setOptions("districtSelect",districts,"All districts");
 
-document.getElementById("adminFile").addEventListener("change",async e => {
-  const file = e.target.files[0];
-  if (!file) return;
+ if(districts.includes(district)){
+  document.getElementById("districtSelect").value = district;
+ }
 
-  setLoading(true,"Reading uploaded EA GeoJSON...");
+ const selectedDistrict =
+  document.getElementById("districtSelect").value;
 
-  try {
-    const data = JSON.parse(await file.text());
-    validateGeoJSON(data);
-    await saveCachedGeoJSON({url:"uploaded:" + file.name,data});
-    initialiseAdmin(data);
-    toast("Uploaded EA GeoJSON loaded.");
-  } catch (error) {
-    console.error(error);
-    toast("File error: " + error.message);
-  } finally {
-    setLoading(false);
-  }
-});
-
-document.getElementById("clearAdminBtn").addEventListener("click",async () => {
-  adminData = null;
-  filteredFeatures = [];
-
-  if (selectedBoundaryLayer) map.removeLayer(selectedBoundaryLayer);
-  selectedBoundaryLayer = null;
-
-  await clearCachedGeoJSON();
-
-  ["regionSelect","districtSelect","wardSelect","eaSelect"].forEach(id => {
-    const el = document.getElementById(id);
-    el.innerHTML = '<option value="">Load EA data first</option>';
-    el.disabled = true;
-  });
-
-  document.getElementById("applyAreaBtn").disabled = true;
-  document.getElementById("resetAreaBtn").disabled = true;
-  document.getElementById("kpiEAs").textContent = "—";
-  document.getElementById("kpiSelected").textContent = "—";
-  document.getElementById("kpiRegions").textContent = "—";
-  document.getElementById("statCount").textContent = "—";
-
-  setStatus("Administrative data not loaded");
-  toast("Administrative data cleared.");
-});
-
-/* =========================================================
-   CASCADING SELECTORS
-========================================================= */
-
-function featuresBy(region,district,ward) {
-  return adminData.features.filter(f => {
-    const p = f.properties || {};
-
-    if (region && String(p[adminFields.region]) !== region) return false;
-    if (district && String(p[adminFields.district]) !== district) return false;
-    if (ward && String(p[adminFields.ward]) !== ward) return false;
-
-    return true;
-  });
-}
-
-document.getElementById("regionSelect").addEventListener("change",function() {
-  const features = featuresBy(this.value,"","");
-
-  setOptions(
-    "districtSelect",
-    uniqueValues(features,adminFields.district),
-    "All districts"
+ if(selectedDistrict && adminFields.district){
+  features = features.filter(f=>
+   String(f.properties?.[adminFields.district]) === selectedDistrict
   );
+ }
 
-  setOptions("wardSelect",[],"All wards");
-  setOptions("eaSelect",[],"All EAs");
-});
+ const wards = uniqueValues(features,adminFields.ward);
 
-document.getElementById("districtSelect").addEventListener("change",function() {
-  const features = featuresBy(
-    document.getElementById("regionSelect").value,
-    this.value,
+ setOptions("wardSelect",wards,"All wards");
+
+ if(wards.includes(ward)){
+  document.getElementById("wardSelect").value = ward;
+ }
+
+ const selectedWard =
+  document.getElementById("wardSelect").value;
+
+ if(selectedWard && adminFields.ward){
+  features = features.filter(f=>
+   String(f.properties?.[adminFields.ward]) === selectedWard
+  );
+ }
+
+ const eas = features.map(f=>{
+  const p = f.properties || {};
+  return String(
+   p[adminFields.eaName] ||
+   p[adminFields.eaCode] ||
+   ""
+  );
+ }).filter(Boolean);
+
+ setOptions(
+  "eaSelect",
+  [...new Set(eas)].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})),
+  "All EAs"
+ );
+}
+
+function applyAdministrativeFilter(){
+
+ if(!adminData) return;
+
+ const region = document.getElementById("regionSelect").value;
+ const district = document.getElementById("districtSelect").value;
+ const ward = document.getElementById("wardSelect").value;
+ const ea = document.getElementById("eaSelect").value;
+
+ filteredFeatures = adminData.features.filter(f=>{
+
+  const p = f.properties || {};
+
+  if(region && String(p[adminFields.region]) !== region) return false;
+
+  if(district && adminFields.district &&
+     String(p[adminFields.district]) !== district) return false;
+
+  if(ward && adminFields.ward &&
+     String(p[adminFields.ward]) !== ward) return false;
+
+  if(ea){
+
+   const eaValue = String(
+    p[adminFields.eaName] ||
+    p[adminFields.eaCode] ||
     ""
-  );
+   );
 
-  setOptions(
-    "wardSelect",
-    uniqueValues(features,adminFields.ward),
-    "All wards"
-  );
-
-  setOptions("eaSelect",[],"All EAs");
-});
-
-document.getElementById("wardSelect").addEventListener("change",function() {
-  const features = featuresBy(
-    document.getElementById("regionSelect").value,
-    document.getElementById("districtSelect").value,
-    this.value
-  );
-
-  const eaValues = features.map(f => {
-    const p = f.properties || {};
-    return String(
-      (adminFields.eaName && p[adminFields.eaName]) ||
-      (adminFields.eaCode && p[adminFields.eaCode]) || ""
-    );
-  }).filter(Boolean);
-
-  setOptions(
-    "eaSelect",
-    [...new Set(eaValues)].sort(),
-    "All EAs"
-  );
-});
-
-function getSelectedFeatures() {
-  if (!adminData) return [];
-
-  const region = document.getElementById("regionSelect").value;
-  const district = document.getElementById("districtSelect").value;
-  const ward = document.getElementById("wardSelect").value;
-  const ea = document.getElementById("eaSelect").value;
-
-  return adminData.features.filter(f => {
-    const p = f.properties || {};
-
-    if (region && String(p[adminFields.region]) !== region) return false;
-    if (district && String(p[adminFields.district]) !== district) return false;
-    if (ward && String(p[adminFields.ward]) !== ward) return false;
-
-    if (ea) {
-      const name =
-        (adminFields.eaName && p[adminFields.eaName]) ||
-        (adminFields.eaCode && p[adminFields.eaCode]) || "";
-
-      if (String(name) !== ea) return false;
-    }
-
-    return true;
-  });
-}
-
-/* =========================================================
-   BOUNDARY DISPLAY
-========================================================= */
-
-function simplifyCoords(coords,step) {
-  if (!Array.isArray(coords)) return coords;
-  if (typeof coords[0] === "number") return coords;
-
-  const output = [];
-
-  for (let i=0;i<coords.length;i++) {
-    if (i === 0 || i === coords.length-1 || i % step === 0) {
-      output.push(simplifyCoords(coords[i],step));
-    }
+   if(eaValue !== ea) return false;
   }
 
-  return output;
+  return true;
+ });
+
+ drawAdministrativeBoundaries();
+ updateAreaStatistics();
+ zoomToSelection();
+
 }
 
-function simplifiedFeature(feature,step) {
-  if (!feature.geometry) return feature;
+function drawAdministrativeBoundaries(){
 
-  return {
-    type:"Feature",
-    properties:feature.properties || {},
-    geometry:{
-      type:feature.geometry.type,
-      coordinates:simplifyCoords(feature.geometry.coordinates,step)
-    }
-  };
-}
-
-function drawBoundary() {
-  if (selectedBoundaryLayer) map.removeLayer(selectedBoundaryLayer);
+ if(selectedBoundaryLayer){
+  map.removeLayer(selectedBoundaryLayer);
   selectedBoundaryLayer = null;
+ }
 
-  if (!document.getElementById("showAdmin").checked ||
-      !filteredFeatures.length) return;
+ if(!filteredFeatures.length) return;
 
-  const level = document.getElementById("boundaryStyle").value;
-  const step = level === "ea" ? 5 : 3;
+ const styleChoice = document.getElementById("boundaryStyle").value;
+
+ const outlineStyle = {
+  color:"#00843d",
+  weight:1.4,
+  opacity:.95,
+  fillColor:"#00843d",
+  fillOpacity:.06
+ };
+
+ if(styleChoice === "ea"){
 
   selectedBoundaryLayer = L.geoJSON({
-    type:"FeatureCollection",
-    features:filteredFeatures.map(f => simplifiedFeature(f,step))
+   type:"FeatureCollection",
+   features:filteredFeatures
   },{
-    style:{
-      color:"#00843d",
-      weight:level === "ea" ? 1 : 2,
-      opacity:.95,
-      fillColor:"#16a34a",
-      fillOpacity:level === "ea" ? .035 : .06
-    },
+   style:feature=>({
+    ...outlineStyle,
+    weight:.65,
+    fillOpacity:.025
+   }),
+   onEachFeature:(feature,layer)=>{
+    const p = feature.properties || {};
 
-    onEachFeature:(feature,layer) => {
-      const p = feature.properties || {};
-
-      layer.bindPopup(
-        "<b>Enumeration Area</b><br>" +
-        "Region: " + escapeHTML(p[adminFields.region] || "") + "<br>" +
-        "District: " + escapeHTML(p[adminFields.district] || "") + "<br>" +
-        "Ward: " + escapeHTML(p[adminFields.ward] || "") + "<br>" +
-        "EA: " + escapeHTML(
-          (adminFields.eaName && p[adminFields.eaName]) ||
-          (adminFields.eaCode && p[adminFields.eaCode]) || ""
-        )
-      );
-    }
+    layer.bindPopup(`
+     <b>Enumeration Area</b><br>
+     Region: ${escapeHTML(p[adminFields.region] || "—")}<br>
+     District: ${escapeHTML(p[adminFields.district] || "—")}<br>
+     Ward: ${escapeHTML(p[adminFields.ward] || "—")}<br>
+     EA: ${escapeHTML(p[adminFields.eaName] || p[adminFields.eaCode] || "—")}
+    `);
+   }
   }).addTo(map);
-}
 
-function applySelection(zoom) {
-  if (!adminData) return;
+ }else{
 
-  const region = document.getElementById("regionSelect").value;
-  const district = document.getElementById("districtSelect").value;
-  const ward = document.getElementById("wardSelect").value;
-  const ea = document.getElementById("eaSelect").value;
+  let groups = new Map();
 
-  filteredFeatures = getSelectedFeatures();
+  filteredFeatures.forEach(f=>{
 
-  document.getElementById("kpiSelected").textContent =
-    filteredFeatures.length.toLocaleString();
+   const p = f.properties || {};
 
-  document.getElementById("statRegion").textContent = region || "All";
-  document.getElementById("statDistrict").textContent = district || "All";
-  document.getElementById("statWard").textContent = ward || "All";
-  document.getElementById("statEA").textContent = ea || "All";
-  document.getElementById("statCount").textContent =
-    filteredFeatures.length.toLocaleString();
+   let key = "";
 
-  const label = [region,district,ward,ea].filter(Boolean).join(" / ");
-  document.getElementById("mapAreaLabel").textContent =
-    label || "THE GAMBIA";
+   if(styleChoice === "region"){
+    key = p[adminFields.region] || "Unknown";
+   }
 
-  document.getElementById("areaInfo").textContent =
-    filteredFeatures.length.toLocaleString() +
-    " EA features in current selection.";
+   if(styleChoice === "district"){
+    key = p[adminFields.district] || "Unknown";
+   }
 
-  drawBoundary();
+   if(styleChoice === "ward"){
+    key = p[adminFields.ward] || "Unknown";
+   }
 
-  if (zoom && selectedBoundaryLayer) {
-    const bounds = selectedBoundaryLayer.getBounds();
-    if (bounds.isValid()) {
-      map.fitBounds(bounds,{padding:[25,25],maxZoom:14});
+   if(!groups.has(key)){
+    groups.set(key,[]);
+   }
+
+   groups.get(key).push(f);
+
+  });
+
+  const layers = [];
+
+  groups.forEach((features,key)=>{
+
+   const layer = L.geoJSON({
+    type:"FeatureCollection",
+    features
+   },{
+    style:{
+     ...outlineStyle,
+     weight:2,
+     fillOpacity:0
     }
-  }
+   });
+
+   layer.bindPopup(
+    `<b>${escapeHTML(styleChoice)}:</b> ${escapeHTML(key)}`
+   );
+
+   layers.push(layer);
+
+  });
+
+  selectedBoundaryLayer = L.featureGroup(layers).addTo(map);
+
+ }
+
 }
 
-document.getElementById("applyAreaBtn").addEventListener("click",() => {
-  applySelection(true);
-});
+function updateAreaStatistics(){
 
-document.getElementById("resetAreaBtn").addEventListener("click",() => {
-  if (!adminData) return;
-  populateRegions();
-  applySelection(true);
-});
+ const region = document.getElementById("regionSelect").value;
+ const district = document.getElementById("districtSelect").value;
+ const ward = document.getElementById("wardSelect").value;
+ const ea = document.getElementById("eaSelect").value;
 
-document.getElementById("showAdmin").addEventListener("change",drawBoundary);
-document.getElementById("boundaryStyle").addEventListener("change",drawBoundary);
+ document.getElementById("kpiSelected").textContent =
+  formatNumber(filteredFeatures.length);
 
-/* =========================================================
-   BASEMAPS AND ONLINE LAYERS
-========================================================= */
+ document.getElementById("statRegion").textContent = region || "All";
+ document.getElementById("statDistrict").textContent = district || "All";
+ document.getElementById("statWard").textContent = ward || "All";
+ document.getElementById("statEA").textContent = ea || "All";
+ document.getElementById("statCount").textContent =
+  formatNumber(filteredFeatures.length);
 
-document.getElementById("basemapSelect").addEventListener("change",function() {
-  if (activeBaseLayer) map.removeLayer(activeBaseLayer);
-  activeBaseLayer = baseLayers[this.value] || baseLayers.street;
-  activeBaseLayer.addTo(map);
-});
+ document.getElementById("areaInfo").textContent =
+  filteredFeatures.length + " enumeration area features selected.";
 
-document.getElementById("showSec").addEventListener("change",function() {
-  if (this.checked) secLayer.addTo(map);
-  else map.removeLayer(secLayer);
-});
+ document.getElementById("mapAreaLabel").textContent =
+  ea || ward || district || region || "THE GAMBIA";
+}
 
-document.getElementById("showDepth").addEventListener("change",function() {
-  if (this.checked) depthLayer.addTo(map);
-  else map.removeLayer(depthLayer);
-});
+function zoomToSelection(){
 
-document.getElementById("showWorldCover").addEventListener("change",function() {
-  if (this.checked) worldCoverLayer.addTo(map);
-  else map.removeLayer(worldCoverLayer);
-});
+ if(!selectedBoundaryLayer) return;
 
-/* =========================================================
-   MAP COORDINATES AND SAMPLE POINTS
-========================================================= */
+ try{
 
-map.on("mousemove",e => {
-  document.getElementById("mapCoordinates").textContent =
-    "Latitude: " + e.latlng.lat.toFixed(5) +
-    " | Longitude: " + e.latlng.lng.toFixed(5);
-});
+  const bounds = selectedBoundaryLayer.getBounds();
 
-map.on("click",e => {
-  captureSamplePoint(e.latlng);
-});
-
-function captureSamplePoint(latlng) {
-  markerCounter++;
-
-  const sample = {
-    id:markerCounter,
-    lat:Number(latlng.lat),
-    lon:Number(latlng.lng),
-    sec:"Not queried",
-    depth:"Not queried",
-    secRaw:null,
-    depthRaw:null,
-    time:new Date().toISOString(),
-    marker:null
-  };
-
-  samples.unshift(sample);
-
-  const marker = L.circleMarker(latlng,{
-    radius:8,
-    color:"#ffffff",
-    weight:2,
-    fillColor:"#e11d48",
-    fillOpacity:1
-  }).addTo(sampleMarkers);
-
-  sample.marker = marker;
-
-  marker.bindPopup(
-    "<b>Sample Point " + sample.id + "</b><br>" +
-    "Latitude: " + sample.lat.toFixed(6) + "<br>" +
-    "Longitude: " + sample.lon.toFixed(6) + "<br>" +
-    "SEC: Not queried<br>Depth: Not queried"
-  );
-
-  marker.openPopup();
-
-  updateSampleTable();
-  showSampleDiagnostics(sample);
-  toast("Sample point " + sample.id + " captured.");
-
-  const secOn = document.getElementById("showSec").checked;
-  const depthOn = document.getElementById("showDepth").checked;
-
-  if (secOn || depthOn) {
-    querySampleValues(latlng,sample,marker);
-  } else {
-    document.getElementById("diagnosticHelp").textContent =
-      "This sample was captured while both BGS query layers were switched off. Coordinates were saved, but no BGS Identify request was made.";
+  if(bounds.isValid()){
+   map.fitBounds(bounds.pad(.12),{maxZoom:15});
   }
+
+ }catch(e){
+  console.warn("Unable to zoom to selected boundary",e);
+ }
+}
+
+function resetAdministrativeSelection(){
+
+ if(!adminData) return;
+
+ document.getElementById("regionSelect").value = "";
+ updateDependentSelectors();
+
+ document.getElementById("districtSelect").value = "";
+ document.getElementById("wardSelect").value = "";
+ document.getElementById("eaSelect").value = "";
+
+ applyAdministrativeFilter();
+}
+
+/* =========================================================
+   BGS IDENTIFY RESPONSE
+========================================================= */
+
+function isNumericValue(value){
+
+ if(value === null || value === undefined) return false;
+
+ const cleaned = String(value).trim();
+
+ if(cleaned === "") return false;
+
+ return /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(cleaned);
+}
+
+function numericValue(value){
+
+ if(!isNumericValue(value)) return null;
+
+ const result = Number(value);
+
+ return Number.isFinite(result) ? result : null;
+}
+
+function extractIdentifyResults(response){
+
+ if(!response || !Array.isArray(response.results)){
+  return [];
+ }
+
+ return response.results;
+}
+
+function getResultAttributes(response){
+
+ const results = extractIdentifyResults(response);
+
+ if(!results.length) return {};
+
+ return results[0].attributes || {};
+}
+
+/*
+ SEC interpretation:
+ - Raster.SEC is the conductivity attribute.
+ - UniqueValue.Pixel Value is preserved as a pixel code.
+ - A pixel code of 0 with blank Raster.SEC is NOT treated as
+   a confirmed conductivity measurement.
+*/
+
+function interpretSEC(response){
+
+ const results = extractIdentifyResults(response);
+
+ if(!results.length){
+  return {
+   status:"NO_RESULT",
+   measurement:null,
+   pixelCode:null,
+   rasterAttribute:null,
+   message:"No SEC raster result returned."
+  };
+ }
+
+ const attributes = results[0].attributes || {};
+
+ const pixelCode = numericValue(
+  attributes["UniqueValue.Pixel Value"]
+ );
+
+ const rasterSEC = numericValue(
+  attributes["Raster.SEC"]
+ );
+
+ if(rasterSEC !== null){
+
+  return {
+   status:"VALID_ATTRIBUTE",
+   measurement:rasterSEC,
+   pixelCode,
+   rasterAttribute:attributes["Raster.SEC"],
+   message:"Numeric Raster.SEC attribute returned."
+  };
+ }
+
+ if(pixelCode === 0){
+
+  return {
+   status:"UNVERIFIED_ZERO",
+   measurement:null,
+   pixelCode,
+   rasterAttribute:attributes["Raster.SEC"] ?? null,
+   message:"Pixel code is zero, but Raster.SEC is blank. Conductivity is unverified."
+  };
+ }
+
+ return {
+  status:"PIXEL_CODE_ONLY",
+  measurement:null,
+  pixelCode,
+  rasterAttribute:attributes["Raster.SEC"] ?? null,
+  message:"Pixel code returned, but no numeric Raster.SEC measurement was supplied."
+ };
+}
+
+/*
+ Groundwater depth interpretation:
+ Preserve the pixel value and all raster attributes.
+ Do not automatically convert a unique-value pixel code into mbgl.
+*/
+
+function interpretDepth(response){
+
+ const results = extractIdentifyResults(response);
+
+ if(!results.length){
+  return {
+   status:"NO_RESULT",
+   pixelCode:null,
+   classAttribute:null,
+   measurement:null,
+   message:"No groundwater-depth raster result returned."
+  };
+ }
+
+ const attributes = results[0].attributes || {};
+
+ const pixelCode = numericValue(
+  attributes["UniqueValue.Pixel Value"]
+ );
+
+ const classAttribute =
+  attributes["Raster.DTWAFRICA_"] ?? null;
+
+ const numericDepth = numericValue(
+  attributes["Raster.DTWAFRICA_"]
+ );
+
+ if(numericDepth !== null){
+
+  return {
+   status:"NUMERIC_ATTRIBUTE",
+   pixelCode,
+   classAttribute,
+   measurement:numericDepth,
+   message:"Numeric groundwater-depth raster attribute returned."
+  };
+ }
+
+ return {
+  status:"PIXEL_CODE_ONLY",
+  pixelCode,
+  classAttribute,
+  measurement:null,
+  message:"Pixel code and class attribute returned. A numeric depth measurement was not identified."
+ };
+}
+
+function getDisplaySEC(sample){
+
+ const result = sample.secInterpretation;
+
+ if(!result) return "Pending";
+
+ if(result.status === "VALID_ATTRIBUTE"){
+  return result.measurement + " µS/cm";
+ }
+
+ if(result.status === "UNVERIFIED_ZERO"){
+  return "0*";
+ }
+
+ if(result.status === "PIXEL_CODE_ONLY"){
+  return "Code " + (result.pixelCode ?? "—");
+ }
+
+ return "No result";
+}
+
+function getDisplayDepth(sample){
+
+ const result = sample.depthInterpretation;
+
+ if(!result) return "Pending";
+
+ if(result.measurement !== null){
+  return result.measurement + " mbgl";
+ }
+
+ if(result.pixelCode !== null){
+  return "Code " + result.pixelCode;
+ }
+
+ return "No result";
 }
 
 /* =========================================================
    BGS IDENTIFY REQUEST
 ========================================================= */
 
-async function identifyLayerAtPoint(latlng,layerId) {
-  const bounds = map.getBounds();
-  const size = map.getSize();
+async function identifyLayerAtPoint(lat,lon,layerId){
 
-  const params = new URLSearchParams();
+ const point = {
+  x:lon,
+  y:lat,
+  spatialReference:{wkid:4326}
+ };
 
-  params.set("f","json");
+ const bounds = map.getBounds();
 
-  params.set("geometry",JSON.stringify({
-    x:latlng.lng,
-    y:latlng.lat,
-    spatialReference:{wkid:4326}
-  }));
+ const extent = {
+  xmin:bounds.getWest(),
+  ymin:bounds.getSouth(),
+  xmax:bounds.getEast(),
+  ymax:bounds.getNorth(),
+  spatialReference:{wkid:4326}
+ };
 
-  params.set("geometryType","esriGeometryPoint");
-  params.set("sr","4326");
+ const params = new URLSearchParams({
 
-  params.set("mapExtent",[
-    bounds.getWest(),
-    bounds.getSouth(),
-    bounds.getEast(),
-    bounds.getNorth()
-  ].join(","));
+  f:"json",
 
-  params.set("imageDisplay",size.x + "," + size.y + ",96");
-  params.set("tolerance","5");
-  params.set("returnGeometry","false");
-  params.set("returnFieldName","true");
-  params.set("returnUnformattedValues","true");
-  params.set("layers","all:" + layerId);
+  geometry:JSON.stringify(point),
 
-  const url = BGS_SERVICE + "/identify?" + params.toString();
+  geometryType:"esriGeometryPoint",
+
+  sr:"4326",
+
+  mapExtent:JSON.stringify(extent),
+
+  imageDisplay:
+   Math.max(map.getSize().x,1)+","+
+   Math.max(map.getSize().y,1)+",96",
+
+  tolerance:"5",
+
+  returnGeometry:"false",
+
+  returnFieldName:"true",
+
+  layers:"all:"+layerId
+
+ });
+
+ const url = BGS_SERVICE + "/identify?" + params.toString();
+
+ const response = await fetch(url,{
+  method:"GET",
+  mode:"cors"
+ });
+
+ if(!response.ok){
+  throw new Error("BGS Identify HTTP error: " + response.status);
+ }
+
+ const data = await response.json();
+
+ if(data.error){
+  throw new Error(
+   data.error.message || "BGS Identify returned an error."
+  );
+ }
+
+ return data;
+}
+
+/* =========================================================
+   DIAGNOSTIC DISPLAY
+========================================================= */
+
+function showSampleDiagnostics(sample){
+
+ const panel = document.getElementById("diagnosticPanel");
+ const status = document.getElementById("diagnosticStatus");
+
+ if(!sample){
+  status.textContent = "No sample selected.";
+  panel.textContent = "Select a sample point.";
+  return;
+ }
+
+ const diagnostic = {
+
+  sample_id:sample.id,
+
+  latitude:sample.lat,
+
+  longitude:sample.lon,
+
+  capture_time:sample.time,
+
+  SEC_interpretation:sample.secInterpretation || null,
+
+  SEC_response:sample.secResponse || null,
+
+  groundwater_depth_interpretation:
+   sample.depthInterpretation || null,
+
+  depth_response:sample.depthResponse || null
+
+ };
+
+ const completed =
+  Boolean(sample.secResponse || sample.depthResponse);
+
+ status.textContent = completed
+  ? "BGS response stored for sample " + sample.id
+  : "Sample coordinates captured. No BGS response yet.";
+
+ panel.textContent = JSON.stringify(diagnostic,null,2);
+}
+
+function showRequestError(sample,layerName,error){
+
+ const panel = document.getElementById("diagnosticPanel");
+ const status = document.getElementById("diagnosticStatus");
+
+ status.textContent = "BGS request error — sample " + sample.id;
+
+ const errorObject = {
+  sample_id:sample.id,
+  latitude:sample.lat,
+  longitude:sample.lon,
+  layer:layerName,
+  error:String(error),
+  time:new Date().toISOString()
+ };
+
+ panel.textContent = JSON.stringify(errorObject,null,2);
+}
+
+/* =========================================================
+   SAMPLE COLLECTION
+========================================================= */
+
+function addSampleMarker(sample){
+
+ const marker = L.circleMarker(
+  [sample.lat,sample.lon],
+  {
+   radius:7,
+   color:"#ffffff",
+   weight:2,
+   fillColor:"#ce1126",
+   fillOpacity:.95
+  }
+ );
+
+ marker.bindPopup(`
+  <b>Sample ${sample.id}</b><br>
+  Latitude: ${formatCoordinate(sample.lat)}<br>
+  Longitude: ${formatCoordinate(sample.lon)}<br>
+  SEC: ${escapeHTML(getDisplaySEC(sample))}<br>
+  Depth: ${escapeHTML(getDisplayDepth(sample))}
+ `);
+
+ marker.on("click",()=>{
+  showSampleDiagnostics(sample);
+ });
+
+ marker.addTo(sampleMarkers);
+
+ sample.marker = marker;
+}
+
+async function captureSamplePoint(lat,lon){
+
+ markerCounter++;
+
+ const sample = {
+
+  id:markerCounter,
+
+  lat:Number(lat),
+
+  lon:Number(lon),
+
+  time:new Date().toISOString(),
+
+  secResponse:null,
+
+  depthResponse:null,
+
+  secInterpretation:null,
+
+  depthInterpretation:null,
+
+  secError:null,
+
+  depthError:null,
+
+  marker:null
+
+ };
+
+ samples.push(sample);
+
+ addSampleMarker(sample);
+
+ updateSampleTable();
+
+ showSampleDiagnostics(sample);
+
+ const querySEC = document.getElementById("showSec").checked;
+ const queryDepth = document.getElementById("showDepth").checked;
+
+ if(!querySEC && !queryDepth){
+
+  toast("Sample point recorded. Enable a BGS layer before capturing to request raster values.");
+
+  return;
+ }
+
+ await querySampleValues(sample,{
+  sec:querySEC,
+  depth:queryDepth
+ });
+
+}
+
+async function querySampleValues(sample,options){
+
+ const tasks = [];
+
+ if(options.sec){
+
+  tasks.push((async()=>{
+
+   try{
+
+    const response = await identifyLayerAtPoint(
+     sample.lat,
+     sample.lon,
+     BGS_LAYERS.SEC
+    );
+
+    sample.secResponse = response;
+    sample.secInterpretation = interpretSEC(response);
+
+   }catch(error){
+
+    sample.secError = String(error);
+    console.error("SEC Identify error:",error);
+
+   }
+
+  })());
+
+ }
+
+ if(options.depth){
+
+  tasks.push((async()=>{
+
+   try{
+
+    const response = await identifyLayerAtPoint(
+     sample.lat,
+     sample.lon,
+     BGS_LAYERS.DEPTH
+    );
+
+    sample.depthResponse = response;
+    sample.depthInterpretation = interpretDepth(response);
+
+   }catch(error){
+
+    sample.depthError = String(error);
+    console.error("Depth Identify error:",error);
+
+   }
+
+  })());
+
+ }
+
+ document.getElementById("diagnosticStatus").textContent =
+  "BGS Identify request in progress for sample " + sample.id;
+
+ document.getElementById("diagnosticPanel").textContent =
+  JSON.stringify({
+   sample_id:sample.id,
+   latitude:sample.lat,
+   longitude:sample.lon,
+   status:"BGS request in progress"
+  },null,2);
+
+ await Promise.all(tasks);
+
+ updateSampleTable();
+
+ if(sample.marker){
+
+  sample.marker.setPopupContent(`
+   <b>Sample ${sample.id}</b><br>
+   Latitude: ${formatCoordinate(sample.lat)}<br>
+   Longitude: ${formatCoordinate(sample.lon)}<br>
+   SEC: ${escapeHTML(getDisplaySEC(sample))}<br>
+   Depth: ${escapeHTML(getDisplayDepth(sample))}
+  `);
+
+ }
+
+ showSampleDiagnostics(sample);
+
+ const errors = [];
+
+ if(sample.secError) errors.push("SEC: " + sample.secError);
+ if(sample.depthError) errors.push("Depth: " + sample.depthError);
+
+ if(errors.length){
+  toast("BGS request completed with errors. Inspect the diagnostics.");
+ }else{
+  toast("BGS Identify completed for sample " + sample.id);
+ }
+
+}
+
+function updateSampleTable(){
+
+ const tbody = document.getElementById("sampleTable");
+
+ document.getElementById("kpiSamples").textContent =
+  formatNumber(samples.length);
+
+ if(!samples.length){
+
+  tbody.innerHTML =
+   '<tr><td colspan="3">No sample points captured.</td></tr>';
+
+  return;
+ }
+
+ tbody.innerHTML = "";
+
+ samples.slice().reverse().forEach(sample=>{
+
+  const tr = document.createElement("tr");
+  tr.className = "sample-row";
+
+  tr.innerHTML = `
+   <td>
+    <b>#${sample.id}</b><br>
+    ${formatCoordinate(sample.lat)},<br>
+    ${formatCoordinate(sample.lon)}
+   </td>
+   <td>${escapeHTML(getDisplaySEC(sample))}</td>
+   <td>${escapeHTML(getDisplayDepth(sample))}</td>
+  `;
+
+  tr.addEventListener("click",()=>{
+
+   showSampleDiagnostics(sample);
+
+   map.setView([sample.lat,sample.lon],15);
+
+   if(sample.marker){
+    sample.marker.openPopup();
+   }
+
+  });
+
+  tbody.appendChild(tr);
+
+ });
+
+}
+
+function clearSamples(){
+
+ samples.forEach(sample=>{
+  if(sample.marker){
+   sampleMarkers.removeLayer(sample.marker);
+  }
+ });
+
+ samples = [];
+ markerCounter = 0;
+
+ updateSampleTable();
+
+ showSampleDiagnostics(null);
+
+ document.getElementById("diagnosticStatus").textContent =
+  "Sample collection cleared.";
+
+ toast("All sample points cleared.");
+}
+
+/* =========================================================
+   EXPORT FUNCTIONS
+========================================================= */
+
+function downloadFile(content,filename,mimeType){
+
+ const blob = new Blob([content],{type:mimeType});
+
+ const url = URL.createObjectURL(blob);
+
+ const link = document.createElement("a");
+
+ link.href = url;
+ link.download = filename;
+
+ document.body.appendChild(link);
+ link.click();
+ link.remove();
+
+ URL.revokeObjectURL(url);
+}
+
+function exportSamplesCSV(){
+
+ if(!samples.length){
+  toast("There are no samples to export.");
+  return;
+ }
+
+ const rows = [[
+
+  "sample_id",
+  "latitude",
+  "longitude",
+  "capture_time",
+
+  "SEC_measurement_uScm",
+  "SEC_pixel_code",
+  "SEC_status",
+  "SEC_raster_attribute",
+
+  "groundwater_depth_measurement_mbgl",
+  "depth_pixel_code",
+  "depth_class_attribute",
+  "depth_status",
+
+  "SEC_error",
+  "depth_error"
+
+ ]];
+
+ samples.forEach(s=>{
+
+  const sec = s.secInterpretation || {};
+  const depth = s.depthInterpretation || {};
+
+  rows.push([
+
+   s.id,
+   s.lat,
+   s.lon,
+   s.time,
+
+   sec.measurement ?? "",
+   sec.pixelCode ?? "",
+   sec.status ?? "",
+   sec.rasterAttribute ?? "",
+
+   depth.measurement ?? "",
+   depth.pixelCode ?? "",
+   depth.classAttribute ?? "",
+   depth.status ?? "",
+
+   s.secError || "",
+   s.depthError || ""
+
+  ]);
+
+ });
+
+ const csv = rows.map(row=>
+  row.map(value=>
+   '"' + String(value ?? "").replace(/"/g,'""') + '"'
+  ).join(",")
+ ).join("\n");
+
+ downloadFile(
+  csv,
+  "GBoS_GEOAI_BGS_Sample_Points.csv",
+  "text/csv;charset=utf-8"
+ );
+
+}
+
+function exportSamplesGeoJSON(){
+
+ if(!samples.length){
+  toast("There are no samples to export.");
+  return;
+ }
+
+ const geojson = {
+  type:"FeatureCollection",
+
+  features:samples.map(s=>({
+
+   type:"Feature",
+
+   geometry:{
+    type:"Point",
+    coordinates:[s.lon,s.lat]
+   },
+
+   properties:{
+
+    sample_id:s.id,
+
+    capture_time:s.time,
+
+    SEC_measurement_uScm:
+     s.secInterpretation?.measurement ?? null,
+
+    SEC_pixel_code:
+     s.secInterpretation?.pixelCode ?? null,
+
+    SEC_status:
+     s.secInterpretation?.status ?? null,
+
+    SEC_response:
+     s.secResponse ?? null,
+
+    depth_measurement_mbgl:
+     s.depthInterpretation?.measurement ?? null,
+
+    depth_pixel_code:
+     s.depthInterpretation?.pixelCode ?? null,
+
+    depth_class_attribute:
+     s.depthInterpretation?.classAttribute ?? null,
+
+    depth_status:
+     s.depthInterpretation?.status ?? null,
+
+    depth_response:
+     s.depthResponse ?? null,
+
+    SEC_error:s.secError ?? null,
+
+    depth_error:s.depthError ?? null
+
+   }
+
+  }))
+ };
+
+ downloadFile(
+  JSON.stringify(geojson,null,2),
+  "GBoS_GEOAI_BGS_Sample_Points.geojson",
+  "application/geo+json"
+ );
+
+}
+
+/* =========================================================
+   EVENT LISTENERS
+========================================================= */
+
+document.getElementById("loadUrlBtn").addEventListener("click",async()=>{
+
+ const url = document.getElementById("adminUrl").value.trim();
+
+ if(!url){
+  toast("Enter a GeoJSON URL or file path.");
+  return;
+ }
+
+ setLoading(true,"Loading administrative GeoJSON...");
+
+ try{
 
   const response = await fetch(url);
 
-  if (!response.ok) {
-    throw new Error("BGS HTTP " + response.status);
+  if(!response.ok){
+   throw new Error("Unable to load GeoJSON. HTTP " + response.status);
   }
 
   const data = await response.json();
 
-  if (data.error) {
-    throw new Error(data.error.message || "BGS identify error");
+  await loadGeoJSON(data);
+
+ }catch(error){
+
+  console.error(error);
+  toast(error.message);
+
+ }finally{
+
+  setLoading(false);
+
+ }
+
+});
+
+document.getElementById("adminFile").addEventListener("change",async event=>{
+
+ const file = event.target.files[0];
+
+ if(!file) return;
+
+ try{
+
+  const text = await file.text();
+  const data = JSON.parse(text);
+
+  setLoading(true,"Processing uploaded EA GeoJSON...");
+
+  await loadGeoJSON(data);
+
+ }catch(error){
+
+  console.error(error);
+  toast("Unable to read uploaded GeoJSON: " + error.message);
+
+ }finally{
+
+  setLoading(false);
+
+ }
+
+});
+
+document.getElementById("clearAdminBtn").addEventListener("click",async()=>{
+
+ adminData = null;
+ filteredFeatures = [];
+
+ if(selectedBoundaryLayer){
+  map.removeLayer(selectedBoundaryLayer);
+  selectedBoundaryLayer = null;
+ }
+
+ await clearCachedGeoJSON();
+
+ ["regionSelect","districtSelect","wardSelect","eaSelect"].forEach(id=>{
+  const el = document.getElementById(id);
+  el.innerHTML = '<option value="">Load EA data first</option>';
+  el.disabled = true;
+ });
+
+ document.getElementById("kpiEAs").textContent = "—";
+ document.getElementById("kpiSelected").textContent = "—";
+ document.getElementById("kpiRegions").textContent = "—";
+
+ document.getElementById("applyAreaBtn").disabled = true;
+ document.getElementById("resetAreaBtn").disabled = true;
+
+ document.getElementById("areaInfo").textContent =
+  "Load the EA GeoJSON to activate selectors.";
+
+ setStatus("Administrative data cleared",false);
+
+ toast("Administrative data cleared.");
+
+});
+
+document.getElementById("regionSelect").addEventListener("change",()=>{
+ updateDependentSelectors();
+});
+
+document.getElementById("districtSelect").addEventListener("change",()=>{
+ updateDependentSelectors();
+});
+
+document.getElementById("wardSelect").addEventListener("change",()=>{
+ updateDependentSelectors();
+});
+
+document.getElementById("eaSelect").addEventListener("change",()=>{
+ // The Apply / Zoom button performs the filter.
+});
+
+document.getElementById("applyAreaBtn").addEventListener("click",()=>{
+ applyAdministrativeFilter();
+});
+
+document.getElementById("resetAreaBtn").addEventListener("click",()=>{
+ resetAdministrativeSelection();
+});
+
+document.getElementById("boundaryStyle").addEventListener("change",()=>{
+ drawAdministrativeBoundaries();
+});
+
+document.getElementById("showAdmin").addEventListener("change",event=>{
+
+ if(event.target.checked){
+
+  if(selectedBoundaryLayer){
+   selectedBoundaryLayer.addTo(map);
+  }else if(filteredFeatures.length){
+   drawAdministrativeBoundaries();
   }
 
-  return data;
-}
-
-/* =========================================================
-   ROBUST RASTER VALUE EXTRACTION
-========================================================= */
-
-function isNumericValue(value) {
-  if (typeof value === "number") return Number.isFinite(value);
-  if (typeof value !== "string") return false;
-
-  const cleaned = value.trim().replace(/,/g,"");
-  if (cleaned === "") return false;
-
-  // Correct numeric expression: supports decimals, integers and exponents.
-  return /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/i.test(cleaned);
-}
-
-function findNumericCandidates(object,path="",output=[]) {
-  if (object === null || object === undefined) return output;
-
-  if (typeof object === "number") {
-    output.push({key:path,value:object});
-    return output;
-  }
-
-  if (typeof object === "string") {
-    if (isNumericValue(object)) {
-      output.push({key:path,value:Number(object)});
-    }
-    return output;
-  }
-
-  if (Array.isArray(object)) {
-    object.forEach((item,index) => {
-      findNumericCandidates(item,path + "[" + index + "]",output);
-    });
-    return output;
-  }
-
-  if (typeof object === "object") {
-    Object.entries(object).forEach(([key,value]) => {
-      findNumericCandidates(
-        value,
-        path ? path + "." + key : key,
-        output
-      );
-    });
-  }
-
-  return output;
-}
-
-function chooseRasterValue(result) {
-  if (!result) return null;
-
-  const attrs = result.attributes || {};
-
-  const preferredKeys = [
-    "Pixel Value",
-    "PixelValue",
-    "Raster.ServicePixelValue",
-    "ServicePixelValue",
-    "Band_1",
-    "Band1",
-    "Value",
-    "value",
-    "SEC",
-    "Depth",
-    "DEPTH",
-    "GRID_CODE"
-  ];
-
-  for (const preferred of preferredKeys) {
-    const match = Object.keys(attrs).find(k =>
-      k.toLowerCase() === preferred.toLowerCase()
-    );
-
-    if (match !== undefined && isNumericValue(attrs[match])) {
-      return {
-        key:match,
-        value:Number(String(attrs[match]).replace(/,/g,""))
-      };
-    }
-  }
-
-  const candidates = findNumericCandidates(attrs);
-
-  if (candidates.length) {
-    const preferred = candidates.find(c =>
-      /(pixel|value|raster|sec|depth|band)/i.test(c.key)
-    );
-
-    return preferred || candidates[0];
-  }
-
-  if (isNumericValue(result.value)) {
-    return {
-      key:"result.value",
-      value:Number(result.value)
-    };
-  }
-
-  return null;
-}
-
-function formatRasterResult(response) {
-  const results = response?.results || [];
-
-  if (!results.length) {
-    return {
-      value:"No raster value",
-      field:"No identify result",
-      raw:response
-    };
-  }
-
-  const result = results[0];
-  const found = chooseRasterValue(result);
-
-  if (found) {
-    return {
-      value:found.value,
-      field:found.key,
-      raw:response
-    };
-  }
-
-  const attributes = result.attributes || {};
-
-  return {
-    value:"No numeric pixel value",
-    field:Object.keys(attributes).join(", ") || "No attribute names",
-    raw:response
-  };
-}
-
-/* =========================================================
-   QUERY SAMPLE VALUES
-========================================================= */
-
-async function querySampleValues(latlng,sample,marker) {
-  const secOn = document.getElementById("showSec").checked;
-  const depthOn = document.getElementById("showDepth").checked;
-
-  const tasks = [];
-
-  if (secOn) {
-    sample.sec = "Querying...";
-
-    tasks.push(
-      identifyLayerAtPoint(latlng,BGS_LAYERS.SEC)
-        .then(response => {
-          const result = formatRasterResult(response);
-          sample.sec = result.value;
-          sample.secRaw = result;
-        })
-        .catch(error => {
-          sample.sec = "Query failed: " + error.message;
-          sample.secRaw = {error:error.message};
-        })
-    );
-  }
-
-  if (depthOn) {
-    sample.depth = "Querying...";
-
-    tasks.push(
-      identifyLayerAtPoint(latlng,BGS_LAYERS.DEPTH)
-        .then(response => {
-          const result = formatRasterResult(response);
-          sample.depth = result.value;
-          sample.depthRaw = result;
-        })
-        .catch(error => {
-          sample.depth = "Query failed: " + error.message;
-          sample.depthRaw = {error:error.message};
-        })
-    );
-  }
-
-  updateSampleTable();
-  showSampleDiagnostics(sample);
-
-  await Promise.all(tasks);
-
-  updateSampleTable();
-  updateMarkerPopup(sample,marker);
-
-  // Automatically show the exact response after query completion.
-  showSampleDiagnostics(sample);
-
-  document.getElementById("diagnosticHelp").textContent =
-    "BGS query completed. The panel below displays the stored Identify response for this sample.";
-
-  toast("BGS query completed for sample " + sample.id + ".");
-}
-
-function updateMarkerPopup(sample,marker) {
-  marker.setPopupContent(
-    "<b>Sample Point " + sample.id + "</b><br>" +
-    "Latitude: " + sample.lat.toFixed(6) + "<br>" +
-    "Longitude: " + sample.lon.toFixed(6) + "<br>" +
-    "SEC: " + escapeHTML(sample.sec) + "<br>" +
-    "Groundwater depth: " + escapeHTML(sample.depth)
-  );
-}
-
-/* =========================================================
-   SAMPLE TABLE AND DIAGNOSTICS
-========================================================= */
-
-function updateSampleTable() {
-  document.getElementById("kpiSamples").textContent =
-    samples.length.toLocaleString();
-
-  const tbody = document.getElementById("sampleTable");
-  tbody.innerHTML = "";
-
-  if (!samples.length) {
-    tbody.innerHTML =
-      '<tr><td colspan="3">No sample points captured.</td></tr>';
-    return;
-  }
-
-  samples.slice(0,50).forEach(sample => {
-    const tr = document.createElement("tr");
-    tr.className = "sample-row";
-
-    if (sample.id === selectedSampleId) {
-      tr.classList.add("selected-row");
-    }
-
-    const location = document.createElement("td");
-    location.innerHTML =
-      "<b>" + sample.id + "</b><br>" +
-      sample.lat.toFixed(5) + ", " +
-      sample.lon.toFixed(5);
-
-    const sec = document.createElement("td");
-    sec.textContent = sample.sec;
-
-    const depth = document.createElement("td");
-    depth.textContent = sample.depth;
-
-    tr.append(location,sec,depth);
-
-    tr.addEventListener("click",() => {
-      selectedSampleId = sample.id;
-      updateSampleTable();
-      showSampleDiagnostics(sample);
-
-      map.setView(
-        [sample.lat,sample.lon],
-        Math.max(map.getZoom(),13)
-      );
-
-      if (sample.marker) sample.marker.openPopup();
-    });
-
-    tbody.appendChild(tr);
-  });
-}
-
-function showSampleDiagnostics(sample) {
-  const panel = document.getElementById("diagnosticPanel");
-
-  if (!sample) {
-    panel.textContent = "No sample point has been selected.";
-    return;
-  }
-
-  const details = {
-    sample_id:sample.id,
-    latitude:sample.lat,
-    longitude:sample.lon,
-    capture_time:sample.time,
-    SEC_value:sample.sec,
-    SEC_response:sample.secRaw,
-    groundwater_depth_value:sample.depth,
-    depth_response:sample.depthRaw
-  };
-
-  panel.textContent = JSON.stringify(details,null,2);
-}
-
-/* =========================================================
-   CLEAR SAMPLES
-========================================================= */
-
-document.getElementById("clearSamplesBtn").addEventListener("click",() => {
-  samples = [];
-  markerCounter = 0;
-  selectedSampleId = null;
-
-  sampleMarkers.clearLayers();
-  updateSampleTable();
-
-  document.getElementById("diagnosticPanel").textContent =
-    "No sample point has been captured yet.";
-
-  document.getElementById("diagnosticHelp").textContent =
-    "Diagnostics will display automatically when a sample is captured or queried.";
-
-  toast("All sample points cleared.");
+ }else if(selectedBoundaryLayer){
+
+  map.removeLayer(selectedBoundaryLayer);
+
+ }
+
+});
+
+document.getElementById("showSec").addEventListener("change",event=>{
+
+ if(event.target.checked){
+  secLayer.addTo(map);
+ }else{
+  map.removeLayer(secLayer);
+ }
+
+});
+
+document.getElementById("showDepth").addEventListener("change",event=>{
+
+ if(event.target.checked){
+  depthLayer.addTo(map);
+ }else{
+  map.removeLayer(depthLayer);
+ }
+
+});
+
+document.getElementById("showWorldCover").addEventListener("change",event=>{
+
+ if(event.target.checked){
+  worldCoverLayer.addTo(map);
+ }else{
+  map.removeLayer(worldCoverLayer);
+ }
+
+});
+
+document.getElementById("basemapSelect").addEventListener("change",event=>{
+
+ const choice = event.target.value;
+
+ if(activeBaseLayer){
+  map.removeLayer(activeBaseLayer);
+ }
+
+ activeBaseLayer = baseLayers[choice];
+
+ if(activeBaseLayer){
+  activeBaseLayer.addTo(map);
+ }
+
+});
+
+document.getElementById("exportSamplesBtn").addEventListener("click",()=>{
+ exportSamplesCSV();
+});
+
+document.getElementById("exportGeoJSONBtn").addEventListener("click",()=>{
+ exportSamplesGeoJSON();
+});
+
+document.getElementById("clearSamplesBtn").addEventListener("click",()=>{
+ clearSamples();
 });
 
 /* =========================================================
-   FILE DOWNLOAD HELPERS
+   MAP INTERACTIONS
 ========================================================= */
 
-function downloadFile(filename,content,mime) {
-  const blob = new Blob([content],{type:mime});
-  const url = URL.createObjectURL(blob);
+map.on("mousemove",event=>{
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
+ document.getElementById("mapCoordinates").textContent =
+  "Lat: " + formatCoordinate(event.latlng.lat) +
+  " | Lon: " + formatCoordinate(event.latlng.lng);
 
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-
-  setTimeout(() => URL.revokeObjectURL(url),1500);
-}
-
-/* =========================================================
-   EXPORT SAMPLE CSV
-========================================================= */
-
-document.getElementById("exportSamplesBtn").addEventListener("click",() => {
-  if (!samples.length) {
-    toast("No sample points to export.");
-    return;
-  }
-
-  const headers = [
-    "sample_id",
-    "latitude",
-    "longitude",
-    "SEC_uS_cm",
-    "SEC_attribute_field",
-    "groundwater_depth_mbgl",
-    "depth_attribute_field",
-    "query_time"
-  ];
-
-  const rows = samples.map(s => [
-    s.id,
-    s.lat,
-    s.lon,
-    s.sec,
-    s.secRaw?.field || "",
-    s.depth,
-    s.depthRaw?.field || "",
-    s.time
-  ]);
-
-  const csv = [headers,...rows].map(row =>
-    row.map(v =>
-      '"' + String(v ?? "").replace(/"/g,'""') + '"'
-    ).join(",")
-  ).join("\n");
-
-  downloadFile(
-    "GBoS_GEOAI_Sample_Points.csv",
-    "\uFEFF" + csv,
-    "text/csv;charset=utf-8"
-  );
 });
 
-/* =========================================================
-   EXPORT SAMPLE GEOJSON
-========================================================= */
+map.on("click",async event=>{
 
-document.getElementById("exportGeoJSONBtn").addEventListener("click",() => {
-  if (!samples.length) {
-    toast("No sample points to export.");
-    return;
-  }
+ await captureSamplePoint(
+  event.latlng.lat,
+  event.latlng.lng
+ );
 
-  const geojson = {
-    type:"FeatureCollection",
-    name:"GBoS_GEOAI_Sample_Points",
-
-    features:samples.map(s => ({
-      type:"Feature",
-
-      geometry:{
-        type:"Point",
-        coordinates:[s.lon,s.lat]
-      },
-
-      properties:{
-        sample_id:s.id,
-        latitude:s.lat,
-        longitude:s.lon,
-        SEC:s.sec,
-        SEC_attribute_field:s.secRaw?.field || "",
-        SEC_response:s.secRaw?.raw || null,
-        groundwater_depth:s.depth,
-        depth_attribute_field:s.depthRaw?.field || "",
-        depth_response:s.depthRaw?.raw || null,
-        query_time:s.time
-      }
-    }))
-  };
-
-  downloadFile(
-    "GBoS_GEOAI_Sample_Points.geojson",
-    JSON.stringify(geojson,null,2),
-    "application/geo+json"
-  );
 });
-
-/* =========================================================
-   EXPORT SELECTED ADMINISTRATIVE BOUNDARY
-========================================================= */
-
-function exportSelectedBoundary() {
-  if (!filteredFeatures.length) {
-    toast("Select an administrative area first.");
-    return;
-  }
-
-  const output = {
-    type:"FeatureCollection",
-    name:"GBoS_GEOAI_Selected_EA_Boundary",
-    features:filteredFeatures
-  };
-
-  downloadFile(
-    "GBoS_GEOAI_Selected_EA_Boundary.geojson",
-    JSON.stringify(output),
-    "application/geo+json"
-  );
-}
 
 /* =========================================================
    STARTUP
 ========================================================= */
 
-async function startup() {
-  const cached = await getCachedGeoJSON();
+async function initialiseDashboard(){
 
-  if (cached && cached.data) {
-    try {
-      document.getElementById("adminUrl").value =
-        cached.url && !cached.url.startsWith("uploaded:")
-          ? cached.url
-          : "./Census_EAs_Geo.json";
+ buildWorldCoverLegend();
 
-      initialiseAdmin(cached.data);
-      setStatus("EA data loaded from browser cache",true);
-      return;
+ setStatus("Checking local administrative cache",false);
 
-    } catch (error) {
-      console.warn("Cached EA file could not be used:",error);
-    }
+ const cached = await getCachedGeoJSON();
+
+ if(cached){
+
+  await loadGeoJSON(cached);
+
+ }else{
+
+  setStatus("Load Census EA GeoJSON",false);
+
+  try{
+
+   const url = document.getElementById("adminUrl").value;
+
+   const response = await fetch(url);
+
+   if(response.ok){
+
+    const data = await response.json();
+
+    await loadGeoJSON(data);
+
+   }
+
+  }catch(error){
+
+   console.info("Default EA file not found. Upload Census_EAs_Geo.json to continue.");
+
+   setStatus("Waiting for EA GeoJSON",false);
+
   }
 
-  loadAdminURL(
-    document.getElementById("adminUrl").value.trim()
-  );
+ }
+
 }
 
-startup();
+initialiseDashboard();
+
 </script>
 </body>
 </html>
+
 
